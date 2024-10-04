@@ -5,6 +5,7 @@
 
 ### Changed
 - removed dep
+- readme
 
 ### Fixed
 
