@@ -2,7 +2,7 @@
 namespace SIM\CONTENTFILTER;
 use SIM;
 
-const MODULE_VERSION		= '8.0.0';
+const MODULE_VERSION		= '8.0.1';
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
 add_action('sim_module_activated', function($moduleSlug){
