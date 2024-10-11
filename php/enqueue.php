@@ -4,5 +4,5 @@ use SIM;
 
 //load js script to change media screen
 add_action( 'wp_enqueue_media', function(){
-    wp_enqueue_script('sim_library_script', plugins_url('js/library.min.js', __DIR__), [], MODULE_VERSION);
+    wp_enqueue_script('sim_library_script', SIM\pathToUrl(MODULE_PATH.'js/library.min.js'), [], MODULE_VERSION);
 });
