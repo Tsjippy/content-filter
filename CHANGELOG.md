@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- removed dep
-- readme
 
 ### Fixed
 
 ### Updated
+
+## [8.0.1] - 2024-10-07
+
+
+### Changed
+- removed dep
+- readme
 
 ## [8.0.0] - 2024-10-04
 
