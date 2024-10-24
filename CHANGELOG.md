@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- filters for not-logged in message
 
 ### Changed
 
