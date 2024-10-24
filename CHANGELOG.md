@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- filters for not-logged in message
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.4] - 2024-10-24
+
+
+### Added
+- filters for not-logged in message
 
 ## [8.0.3] - 2024-10-17
 
