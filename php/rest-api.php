@@ -10,12 +10,18 @@ add_filter( 'rest_authentication_errors', function( $result ) {
         return $result;
     }
     
-    // No authentication has been performed yet return an error if user is not logged in, exception for wp-mail-smtp
+    // No authentication has been performed yet return an error if user is not logged in, exception for some rest api calls
     if ( is_user_logged_in() || isAllowedRestApiUrl()) {
 		// Our custom authentication check should have no effect on logged-in requests
 		return $result;
     }else{
-		return new WP_Error( 'content filter', __( 'You should be logged in to perform this request' ), array( 'status' => rest_authorization_required_code() ) );
+		$loginUrl 	= wp_login_url(SIM\getCurrentUrl());
+
+		$message	= apply_filters('sim-content-filter-rest-not-logged-in-message', "You should be logged in to perform this request.<br>Login <a href='$loginUrl'>here</a>");
+
+		$data		= apply_filters('sim-content-filter-rest-not-logged-in-data', array( 'status' => rest_authorization_required_code() ));
+
+		return new WP_Error( 'content filter', __( $message ), $data );
 	}
 });
 

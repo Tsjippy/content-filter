@@ -80,13 +80,6 @@ add_action('loop_end', function(){
 		ob_get_clean();
 		unset($GLOBALS['loginadded']);
 
-		if(!isset($_SESSION)){
-			session_start();
-		}
-		$_SESSION['showpage']   = 'true';
-
-		session_write_close();
-
 		// Set message to be used in the login page
 		$message = 'This content is restricted. <br>You will be able to see this page as soon as you login.';
 
