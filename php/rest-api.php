@@ -4,7 +4,8 @@ use SIM;
 use WP_Error;
 
 //Secure the rest api
-add_filter( 'rest_authentication_errors', function( $result ) {
+add_filter( 'rest_authentication_errors', __NAMESPACE__.'\euthenticationErrors');
+function authenticationErrors( $result ) {
     // If a previous authentication check was applied, pass that result along without modification.
     if ( true === $result || is_wp_error( $result ) ) {
         return $result;
@@ -23,7 +24,7 @@ add_filter( 'rest_authentication_errors', function( $result ) {
 
 		return new WP_Error( 'content filter', __( $message ), $data );
 	}
-});
+}
 
 function isAllowedRestApiUrl(){
 	$urls	= [

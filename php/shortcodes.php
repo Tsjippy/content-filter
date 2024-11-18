@@ -3,7 +3,8 @@ namespace SIM\CONTENTFILTER;
 use SIM;
 
 // Make partial page contents filterable
-add_shortcode( 'content_filter', function ( $atts = array(), $content = null ) {
+add_shortcode( 'content_filter', __NAMESPACE__.'\renderContentFilterShortcode');
+function renderContentFilterShortcode( $atts = array(), $content = null ) {
 	$a = shortcode_atts( array(
         'inversed' => false,
 		'roles' => "All",
@@ -33,4 +34,4 @@ add_shortcode( 'content_filter', function ( $atts = array(), $content = null ) {
 		//return the shortcode content
 		return do_shortcode($content);
 	}
-});
+}

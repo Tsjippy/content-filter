@@ -5,25 +5,28 @@ use SIM;
 use function SIM\getModuleOption;
 
 //function to redirect user to login page if they are not allowed to see it
-add_action('loop_start', function($query){
+add_action('loop_start', __NAMESPACE__.'\loopStart');
+function loopStart($query){
 	if($query->is_main_query() && isProtected()){
 		ob_start();
 	}
-});
+}
 
 // Add meta tag so this page is not indexed by search machines
-add_action ( 'wp_head', function(){
+add_action ( 'wp_head', __NAMESPACE__.'\wpHead');
+function wpHead(){
 	if(isProtected()){
 		echo '<meta name="robots" content="noindex, nofollow">';
 	}
-});
+}
 
-add_filter( 'robots_txt', function($output, $public ){
+add_filter( 'robots_txt', __NAMESPACE__.'\robotsText', 10, 2);
+function robotsText($output, $public ){
 	$output	.= "User-agent: *\n";
 	$output	.= "Disallow: /wp-content/\n";
 
 	return $output;
-}, 10, 2);
+}
 
 /**
  * Checks if current page is protected
@@ -56,12 +59,14 @@ function isProtected(){
 	return false;
 }
 
-add_filter('sim_add_login_button', function($show){
+add_filter('sim_add_login_button', __NAMESPACE__.'\loginButton');
+function loginButton($show){
 
 	return !isProtected();
-});
+}
 
-add_action('loop_end', function(){
+add_action('loop_end', __NAMESPACE__.'\loopEnd');
+function loopEnd(){
 	$user				= wp_get_current_user();
 	global	$post;
 	$taxonomy			= get_post_taxonomies()[0];
@@ -105,39 +110,43 @@ add_action('loop_end', function(){
 		ob_get_clean();
 		echo "<div class='error'>You do not have the permission to see this.</div>";
 	}
-});
+}
 
 //Make sure is_user_logged_in function is available by only running this when init
-add_action('init', function (){
+add_action('init', __NAMESPACE__.'\init');
+function init(){
 	// do not run during rest request
     if(SIM\isRestApiRequest()){
         return;
     }
 	
 	//Function to only show newsittems on the news page the user is allowed to see
-	add_action( 'pre_get_posts', function ( $query ) {
-		if ( $query->is_home() && $query->is_main_query() ) {
-			if ( !is_user_logged_in() ) {
-				//Only show items with the public category
-				$query->set( 'cat', get_cat_ID('Public') );
-				//Only show the items without a password
-				$query->set( 'has_password', false );
-			}else{
-				$user = wp_get_current_user();
-				$confidentialGroups	= getModuleOption(MODULE_SLUG, 'confidential-roles', false);
-				if(array_intersect($confidentialGroups, $user->roles)){
-					//Hide confidential items
-					$query->set( 'category__not_in', [get_cat_ID('Confidential')] );
-				}
+	add_action( 'pre_get_posts', __NAMESPACE__.'\preNewsPosts');
+}
+
+function preNewsPosts( $query ) {
+	if ( $query->is_home() && $query->is_main_query() ) {
+		if ( !is_user_logged_in() ) {
+			//Only show items with the public category
+			$query->set( 'cat', get_cat_ID('Public') );
+			//Only show the items without a password
+			$query->set( 'has_password', false );
+		}else{
+			$user = wp_get_current_user();
+			$confidentialGroups	= getModuleOption(MODULE_SLUG, 'confidential-roles', false);
+			if(array_intersect($confidentialGroups, $user->roles)){
+				//Hide confidential items
+				$query->set( 'category__not_in', [get_cat_ID('Confidential')] );
 			}
 		}
-	});
-});
+	}
+}
 
 //Only show public search results for non-loggedin users
-add_filter('pre_get_posts', function ($query) {
+add_filter('pre_get_posts', __NAMESPACE__.'\prePosts');
+function prePosts($query) {
 	if ($query->is_search &&  !is_user_logged_in() ) {
 		$query->set('cat', get_cat_ID('Public'));
 	}
 	return $query;
-});
+}

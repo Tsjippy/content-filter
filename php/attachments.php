@@ -3,7 +3,8 @@ namespace SIM\CONTENTFILTER;
 use SIM;
 
 //add public/private radio buttons to attachment page
-add_filter( 'attachment_fields_to_edit', function($formFields, $post ){
+add_filter( 'attachment_fields_to_edit', __NAMESPACE__.'\fieldsToEdit', 10, 2);
+function fieldsToEdit($formFields, $post ){
     $fieldValue = get_post_meta( $post->ID, 'visibility', true );
 
     if($fieldValue == 'public' || empty($fieldValue)){
@@ -33,10 +34,11 @@ add_filter( 'attachment_fields_to_edit', function($formFields, $post ){
     );
 
     return $formFields;
-},10,2);
+}
 
 //change visibility of an attachment
-add_action( 'edit_attachment', function($attachmentId){
+add_action( 'edit_attachment', __NAMESPACE__.'\editAttachment');
+function editAttachment($attachmentId){
     if ( isset( $_REQUEST['attachments'][$attachmentId]['visibility'] ) ) {
         $visibility     = $_REQUEST['attachments'][$attachmentId]['visibility'];
 
@@ -58,7 +60,7 @@ add_action( 'edit_attachment', function($attachmentId){
             moveAttachment($attachmentId, $targetPath);
         }
     }
-} );
+}
 
 /**
  * Move attachment to other folder
@@ -107,7 +109,8 @@ function moveAttachment($postId, $subDir, $generate=true){
 }
 
 // filter library if needed
-add_filter( 'ajax_query_attachments_args', function($query){
+add_filter( 'ajax_query_attachments_args',  __NAMESPACE__.'\attachmentArgs');
+function attachmentArgs($query){
     if(!empty($_REQUEST['query']['visibility'])){
         $visibility = $_REQUEST['query']['visibility'];
         $query['meta_query'] = [
@@ -128,14 +131,15 @@ add_filter( 'ajax_query_attachments_args', function($query){
     }
 
     return $query;
-} );
+}
 
 /**
  * Make private by default if enabled
  */
 
 // Move the file to the private dir
-add_filter('wp_handle_upload', function($file){
+add_filter('wp_handle_upload', __NAMESPACE__.'\handleUpload');
+function handleUpload($file){
     $default    = SIM\getModuleOption(MODULE_SLUG, 'default_status');
 
     if($default == 'private' && !str_contains($file['file'], 'private')){
@@ -149,13 +153,14 @@ add_filter('wp_handle_upload', function($file){
     }
 
     return $file;
-});
+}
 
 // Set the visibility key
-add_action( 'add_attachment', function ( $postId) {
+add_action( 'add_attachment', __NAMESPACE__.'\addAttachment');
+function addAttachment( $postId) {
     $default    = SIM\getModuleOption(MODULE_SLUG, 'default_status');
 
     if($default == 'private'){
         update_metadata( 'post',  $postId, 'visibility', 'private' );
     }
-});
+}
