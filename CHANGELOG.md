@@ -5,6 +5,7 @@
 
 ### Changed
 - removed anonymous functions
+- removed anonymous functions
 
 ### Fixed
 
