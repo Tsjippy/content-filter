@@ -8,24 +8,16 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
-add_action('sim_module_activated', __NAMESPACE__.'\moduleActivated');
-function moduleActivated($moduleSlug){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG)	{return;}
-	
+add_action('sim_module_contentfilter_activated', __NAMESPACE__.'\moduleActivated');
+function moduleActivated(){	
 	//Create a public category if it does not exist
 	wp_create_category('Public');
 	wp_create_category('Confidential');
 }
 
-add_filter('sim_submenu_options', __NAMESPACE__.'\subMenuOptions', 10, 3);
-function subMenuOptions($optionsHtml, $moduleSlug, $settings){
+add_filter('sim_submenu_contentfilter_options', __NAMESPACE__.'\subMenuOptions', 10, 2);
+function subMenuOptions($optionsHtml, $settings){
 	global $wp_roles;
-
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $optionsHtml;
-	}
 
 	ob_start();
 
@@ -52,5 +44,5 @@ function subMenuOptions($optionsHtml, $moduleSlug, $settings){
 			?>
 	</label>
 	<?php
-	return ob_get_clean();
+	return $optionsHtml.ob_get_clean();
 }
