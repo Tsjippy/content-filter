@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- exclude from AJAX Search
 
 ### Changed
 
