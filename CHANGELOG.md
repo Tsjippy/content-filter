@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- exclude from AJAX Search
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.0.7] - 2025-07-03
+
+
+### Added
+- exclude from AJAX Search
 
 ## [8.0.6] - 2025-02-13
 
