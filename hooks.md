@@ -5,4 +5,4 @@
 
 
 # Actions
-- 
+- sim-content-filter-reset-page

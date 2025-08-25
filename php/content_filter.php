@@ -85,6 +85,8 @@ function loopEnd(){
 		ob_get_clean();
 		unset($GLOBALS['loginadded']);
 
+		do_action('sim-content-filter-reset-page');
+
 		// Set message to be used in the login page
 		$message = 'This content is restricted. <br>You will be able to see this page as soon as you login.';
 
