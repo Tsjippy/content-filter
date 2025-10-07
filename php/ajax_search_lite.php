@@ -6,13 +6,13 @@ add_filter('asl_query_cpt', __NAMESPACE__.'\limitSearchToPublic', 10, 4);
 function limitSearchToPublic($querystr, $args, $id, $_ajax_search){
     if ( !is_user_logged_in() ) {
         // Calculate the current term query
-        $current    = build_term_query( $args );
+        $current    = buildTermQuery( $args );
 
         // Now change the arguments
         $args['post_tax_filter'][0]['include'] = [get_cat_ID('Public')];
 
         // Calculate the new one
-        $new        = build_term_query( $args );
+        $new        = buildTermQuery( $args );
 
         // Make the replacement
         $querystr   = str_replace($current, $new, $querystr);
@@ -21,40 +21,40 @@ function limitSearchToPublic($querystr, $args, $id, $_ajax_search){
     return $querystr;
 }
 
-function build_term_query( $args ) {
+function buildTermQuery( $args ) {
     global $wpdb;
-    $post_id_field      = $wpdb->posts . '.ID';
-    $post_type_field    = $wpdb->posts . '.post_type';
+    $postIdField      = $wpdb->posts . '.ID';
+    $postTypeField    = $wpdb->posts . '.post_type';
 
     if ( isset($_GET['ignore_op']) ) {
         return '';
     }
 
-    $term_query       = '';
-    $term_query_parts = array();
+    $termQuery       = '';
+    $termQueryParts = array();
 
     foreach ( $args['post_tax_filter'] as $k => $item ) {
-        $tax_term_query = '';
+        $taxTermQuery = '';
         $taxonomy       = $item['taxonomy'];
 
         // Is there an argument set to allow empty items for this taxonomy filter?
         if ( isset($item['allow_empty']) ) {
-            $allow_empty_tax_term = $item['allow_empty'];
+            $allowEmptyTaxTerm = $item['allow_empty'];
         } else {
-            $allow_empty_tax_term = $taxonomy == 'post_tag' ? $args['_post_tags_empty'] : $args['_post_allow_empty_tax_term'];
+            $allowEmptyTaxTerm = $taxonomy == 'post_tag' ? $args['_post_tags_empty'] : $args['_post_allowEmptyTaxTerm'];
         }
 
-        if ( $allow_empty_tax_term == 1 ) {
-            $empty_terms_query = "
+        if ( $allowEmptyTaxTerm == 1 ) {
+            $emptyTermsQuery = "
             NOT EXISTS (
                 SELECT *
                 FROM $wpdb->term_relationships as xt
                 INNER JOIN $wpdb->term_taxonomy as tt ON ( xt.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = '$taxonomy')
                 WHERE
-                    xt.object_id = $post_id_field
+                    xt.object_id = $postIdField
             ) OR ";
         } else {
-            $empty_terms_query = '';
+            $emptyTermsQuery = '';
         }
 
         // Quick explanation for the AND
@@ -63,10 +63,10 @@ function build_term_query( $args ) {
         // This is used because of multiple object_ids (posts in more than 1 tag)
         if ( !empty($item['exclude']) ) {
             $words          = implode( ',', $item['exclude'] );
-            $tax_term_query = " (
-                $empty_terms_query
+            $taxTermQuery = " (
+                $emptyTermsQuery
 
-                $post_id_field IN (
+                $postIdField IN (
                     SELECT DISTINCT(tr.object_id)
                         FROM $wpdb->term_relationships AS tr
                         LEFT JOIN $wpdb->term_taxonomy as tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = '$taxonomy')
@@ -83,23 +83,23 @@ function build_term_query( $args ) {
         }
         if ( !empty($item['include']) ) {
             $words = implode( ',', $item['include'] );
-            if ( !empty($tax_term_query) ) {
-                $tax_term_query .= ' AND ';
+            if ( !empty($taxTermQuery) ) {
+                $taxTermQuery .= ' AND ';
             }
             if ( isset($item['logic']) && $item['logic'] == 'andex' ) {
-                $tax_term_query .= "(
-                    $empty_terms_query
+                $taxTermQuery .= "(
+                    $emptyTermsQuery
 
                     " . count($item['include']) . " = ( SELECT COUNT(tr.object_id)
                         FROM $wpdb->term_relationships AS tr
                         LEFT JOIN $wpdb->term_taxonomy as tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = '$taxonomy')
-                        WHERE tt.term_id IN ($words) AND tr.object_id = $post_id_field
+                        WHERE tt.term_id IN ($words) AND tr.object_id = $postIdField
                     ) )";
             } else {
-                $tax_term_query .= "(
-                    $empty_terms_query
+                $taxTermQuery .= "(
+                    $emptyTermsQuery
 
-                    $post_id_field IN ( SELECT DISTINCT(tr.object_id)
+                    $postIdField IN ( SELECT DISTINCT(tr.object_id)
                         FROM $wpdb->term_relationships AS tr
                         LEFT JOIN $wpdb->term_taxonomy as tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = '$taxonomy')
                         WHERE tt.term_id IN ($words)
@@ -118,32 +118,32 @@ function build_term_query( $args ) {
         if (
             $taxonomy == 'post_tag' &&
             $args['_post_tags_active'] == 1 &&
-            $tax_term_query == '' &&
+            $taxTermQuery == '' &&
             $args['_post_tags_empty'] == 0
         ) {
-            $tax_term_query = "
+            $taxTermQuery = "
             (
-                ($post_type_field != 'post') OR
+                ($postTypeField != 'post') OR
 
                 EXISTS (
                     SELECT *
                     FROM $wpdb->term_relationships as xt
                     INNER JOIN $wpdb->term_taxonomy as tt ON ( xt.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'post_tag')
                     WHERE
-                        xt.object_id = $post_id_field
+                        xt.object_id = $postIdField
                 )
             )";
         }
         // ----------------------------------------------------
 
-        if ( !empty($tax_term_query) ) {
-            $term_query_parts[] = '(' . $tax_term_query . ')';
+        if ( !empty($taxTermQuery) ) {
+            $termQueryParts[] = '(' . $taxTermQuery . ')';
         }
     }
 
-    if ( !empty($term_query_parts) ) {
-        $term_query = 'AND (' . implode(' ' . strtoupper($args['_taxonomy_group_logic']) . ' ', $term_query_parts) . ') ';
+    if ( !empty($termQueryParts) ) {
+        $termQuery = 'AND (' . implode(' ' . strtoupper($args['_taxonomy_group_logic']) . ' ', $termQueryParts) . ') ';
     }
 
-    return $term_query;
+    return $termQuery;
 }

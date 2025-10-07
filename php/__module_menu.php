@@ -24,7 +24,7 @@ function subMenuOptions($optionsHtml, $settings){
 	$roles	= $wp_roles->role_names;
     ?>
 	<label>
-		<input type="checkbox" name="default_status" value="private" <?php if(isset($settings['default_status']) && $settings['default_status'] == 'private'){echo 'checked';}?>>
+		<input type="checkbox" name="default-status" value="private" <?php if(isset($settings['default-status']) && $settings['default-status'] == 'private'){echo 'checked';}?>>
 		Make uploaded media private by default
 	</label>
 	<br>
