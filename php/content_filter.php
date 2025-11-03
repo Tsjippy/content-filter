@@ -65,7 +65,7 @@ function loginButton($show){
 	return !isProtected();
 }
 
-add_action('loop_end', __NAMESPACE__.'\loopEnd');
+add_action('get_footer', __NAMESPACE__.'\loopEnd');
 function loopEnd(){
 	$user				= wp_get_current_user();
 	global	$post;
