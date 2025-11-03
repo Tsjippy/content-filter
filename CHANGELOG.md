@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- sidebars should not be visible when not logged in
 
 ### Updated
+
+## [8.1.0] - 2025-11-03
+
+
+### Fixed
+- sidebars should not be visible when not logged in
 
 ## [8.0.9] - 2025-10-13
 
