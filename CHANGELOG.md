@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- sidebars should not be visible when not logged in
 
 ### Updated
 
