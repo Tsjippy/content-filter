@@ -4,11 +4,19 @@ use SIM;
 
 use function SIM\getModuleOption;
 
-//function to redirect user to login page if they are not allowed to see it
-add_action('loop_start', __NAMESPACE__.'\loopStart');
-function loopStart($query){
-	if($query->is_main_query() && isProtected()){
-		ob_start();
+// Kill the page load if the page is protected
+add_action('wp_body_open', __NAMESPACE__.'\killPageLoad');
+function killPageLoad(){
+	global $wp_query;
+
+	if($wp_query->is_main_query() && isProtected()){
+		echo ob_get_clean();
+
+		$message 	= 'This content is restricted. <br>You will be able to see this page as soon as you login.';
+		wp_die($message, 'This content is restricted.');
+
+		print_footer_scripts();
+		exit;
 	}
 }
 
@@ -20,6 +28,7 @@ function wpHead(){
 	}
 }
 
+// Discourage robots
 add_filter( 'robots_txt', __NAMESPACE__.'\robotsText', 10, 2);
 function robotsText($output, $public ){
 	$output	.= "User-agent: *\n";
@@ -59,6 +68,7 @@ function isProtected(){
 	return false;
 }
 
+// Add a login button if the user is not logged in and the current page is only for logged in users
 add_filter('sim_add_login_button', __NAMESPACE__.'\loginButton');
 function loginButton($show){
 
@@ -67,8 +77,8 @@ function loginButton($show){
 
 add_action('get_footer', __NAMESPACE__.'\loopEnd');
 function loopEnd(){
-	$user				= wp_get_current_user();
 	global	$post;
+	$user				= wp_get_current_user();
 	$taxonomy			= get_post_taxonomies()[0];
 
 	$public				= false;
@@ -77,24 +87,6 @@ function loopEnd(){
 			$public	= true;
 			break;
 		}
-	}
-
-	//If this page or post does not have the public category and the user is not logged in, redirect them to the login page
-	if(	isProtected() ){
-		//prevent the output
-		ob_get_clean();
-		unset($GLOBALS['loginadded']);
-
-		do_action('sim-content-filter-reset-page');
-
-		// Set message to be used in the login page
-		$message = 'This content is restricted. <br>You will be able to see this page as soon as you login.';
-
-		//show login modal
-		if(function_exists('SIM\LOGIN\loginModal')){
-			SIM\LOGIN\loginModal($message, true);
-		}
-		return; 
 	}
 	
 	// If not a valid e-mail then only allow the account page to reset the email
