@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- more robust and faster way of blocking page access
 
 ### Fixed
 
