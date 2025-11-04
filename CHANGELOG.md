@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- more robust and faster way of blocking page access
 
 ### Fixed
 
 ### Updated
+
+## [8.1.1] - 2025-11-04
+
+
+### Changed
+- more robust and faster way of blocking page access
 
 ## [8.1.0] - 2025-11-03
 
