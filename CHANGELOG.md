@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- fetch_nonce over ajax when not logged in
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.1.2] - 2025-11-24
+
+
+### Added
+- fetch_nonce over ajax when not logged in
 
 ## [8.1.1] - 2025-11-04
 
