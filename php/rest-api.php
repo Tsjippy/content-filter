@@ -28,7 +28,8 @@ function authenticationErrors( $result ) {
 
 function isAllowedRestApiUrl(){
 	$urls	= [
-		'wp-mail-smtp/v1'
+		'wp-mail-smtp/v1',
+		RESTAPIPREFIX.'/fetch_nonce'
 	];
 
 	$urls	= apply_filters('sim_allowed_rest_api_urls', $urls);
