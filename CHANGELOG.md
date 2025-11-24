@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- fetch_nonce over ajax when not logged in
 
 ### Changed
 
