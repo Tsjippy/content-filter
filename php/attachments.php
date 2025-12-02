@@ -140,7 +140,7 @@ function attachmentArgs($query){
 // Move the file to the private dir
 add_filter('wp_handle_upload', __NAMESPACE__.'\handleUpload');
 function handleUpload($file){
-    $default    = SIM\getModuleOption(MODULE_SLUG, 'default_status');
+    $default    = SIM\getModuleOption(MODULE_SLUG, 'default-status');
 
     if($default == 'private' && !str_contains($file['file'], 'private')){
         $newPath    = wp_upload_dir()['basedir'].'/private/'.basename($file['file']);
@@ -158,7 +158,7 @@ function handleUpload($file){
 // Set the visibility key
 add_action( 'add_attachment', __NAMESPACE__.'\addAttachment');
 function addAttachment( $postId) {
-    $default    = SIM\getModuleOption(MODULE_SLUG, 'default_status');
+    $default    = SIM\getModuleOption(MODULE_SLUG, 'default-status');
 
     if($default == 'private'){
         update_metadata( 'post',  $postId, 'visibility', 'private' );
