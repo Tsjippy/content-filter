@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- module option key
 
 ### Fixed
 
 ### Updated
+
+## [8.1.4] - 2025-12-02
+
+
+### Changed
+- module option key
 
 ## [8.1.3] - 2025-11-26
 
