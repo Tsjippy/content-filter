@@ -8,6 +8,7 @@
 
 ### Fixed
 - admin page settings
+- bug in constants
 
 ### Updated
 
