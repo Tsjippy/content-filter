@@ -33,7 +33,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 foreach($roles as $key=>$role){
                     ?>
                     <label>
-                        <input type="checkbox" name="confidential-roles[]" value="<?php echo $key;?>" <?php if(is_array($this->settings['confidential-roles']) && in_array($key, $this->settings['confidential-roles'])){echo 'checked';}?>>
+                        <input type="checkbox" name="confidential-roles[]" value="<?php echo $key;?>" <?php echo isset($this->settings['confidential-roles']) && is_array($this->settings['confidential-roles']) && in_array($key, $this->settings['confidential-roles']) ? 'checked' : '';?>>
                         <?php echo $role;?>
                     </label>
                     <br>
@@ -41,6 +41,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 }
                 ?>
         </label>
+        <br>
         <?php
 
         SIM\addRawHtml(ob_get_clean(), $parent);
