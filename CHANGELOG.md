@@ -10,6 +10,7 @@
 ### Fixed
 - admin page settings
 - bug in constants
+- pkugin activation
 
 ### Updated
 
