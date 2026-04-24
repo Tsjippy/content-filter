@@ -96,7 +96,7 @@ function loopEnd(){
 	}
 	
 	//block access to confidential pages
-	$confidentialGroups	= SETTINGS['confidential-roles'] ?? false;
+	$confidentialGroups	= SETTINGS['confidential-roles'] ?? [];
 	if(is_page() && has_category('Confidential') && array_intersect($confidentialGroups, $user->roles)){
 		//prevent the output
 		ob_get_clean();
@@ -126,7 +126,7 @@ function preNewsPosts( $query ) {
 		}else{
 			$user = wp_get_current_user();
 			
-			$confidentialGroups	= SETTINGS['confidential-roles'] ?? false;
+			$confidentialGroups	= SETTINGS['confidential-roles'] ?? [];
 			if(array_intersect($confidentialGroups, $user->roles)){
 				//Hide confidential items
 				$query->set( 'category__not_in', [get_cat_ID('Confidential')] );
