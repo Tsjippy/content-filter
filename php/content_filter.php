@@ -2,8 +2,6 @@
 namespace SIM\CONTENTFILTER;
 use SIM;
 
-use function SIM\getModuleOption;
-
 // Kill the page load if the page is protected
 add_action('wp_body_open', __NAMESPACE__.'\killPageLoad');
 function killPageLoad(){
@@ -98,7 +96,7 @@ function loopEnd(){
 	}
 	
 	//block access to confidential pages
-	$confidentialGroups	= getModuleOption(MODULE_SLUG, 'confidential-roles', false);
+	$confidentialGroups	= SETTINGS['confidential-roles'] ?? false;
 	if(is_page() && has_category('Confidential') && array_intersect($confidentialGroups, $user->roles)){
 		//prevent the output
 		ob_get_clean();
@@ -127,7 +125,8 @@ function preNewsPosts( $query ) {
 			$query->set( 'has_password', false );
 		}else{
 			$user = wp_get_current_user();
-			$confidentialGroups	= getModuleOption(MODULE_SLUG, 'confidential-roles', false);
+			
+			$confidentialGroups	= SETTINGS['confidential-roles'] ?? false;
 			if(array_intersect($confidentialGroups, $user->roles)){
 				//Hide confidential items
 				$query->set( 'category__not_in', [get_cat_ID('Confidential')] );
