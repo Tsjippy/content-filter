@@ -5,6 +5,7 @@
 
 ### Changed
 - coverted to plugin with classes
+- plugin name
 
 ### Fixed
 - admin page settings
