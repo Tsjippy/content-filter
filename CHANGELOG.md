@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- coverted to plugin with classes
 
 ### Fixed
 
