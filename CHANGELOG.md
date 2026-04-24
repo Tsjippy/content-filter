@@ -11,6 +11,7 @@
 - admin page settings
 - bug in constants
 - pkugin activation
+- pluginpath constant
 
 ### Updated
 
