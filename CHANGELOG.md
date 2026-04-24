@@ -7,6 +7,7 @@
 - coverted to plugin with classes
 
 ### Fixed
+- admin page settings
 
 ### Updated
 
