@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- trailing slash to pluginpath connstant
 
 ### Changed
 - coverted to plugin with classes
