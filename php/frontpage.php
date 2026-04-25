@@ -2,7 +2,7 @@
 namespace SIM\CONTENTFILTER;
 use SIM;
 
-add_filter('sim-frontpage-post-gallery-posts', __NAMESPACE__.'\postGalleryPosts', 10, 2);
+add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__.'\postGalleryPosts', 10, 2);
 function postGalleryPosts($args, $postTypes){
     if(is_user_logged_in()){
         return $args;

@@ -68,7 +68,7 @@ function isProtected(){
 }
 
 // Add a login button if the user is not logged in and the current page is only for logged in users
-add_filter('sim_add_login_button', __NAMESPACE__.'\loginButton');
+add_filter('tsjippy_add_login_button', __NAMESPACE__.'\loginButton');
 function loginButton($show){
 
 	return !isProtected();
