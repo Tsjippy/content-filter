@@ -42,13 +42,14 @@ function robotsText($output, $public ){
  */
 function isProtected(){
 	global	$post;
-	$taxonomy			= get_post_taxonomies()[0];
-
+	
 	$public				= false;
-	foreach((array)get_the_terms($post, $taxonomy) as $term){
-		if(!empty($term) && $term->slug	== 'public'){
-			$public	= true;
-			break;
+	foreach(get_post_taxonomies() as $taxonomy){
+		foreach((array)get_the_terms($post, $taxonomy) as $term){
+			if(!empty($term) && $term->slug	== 'public'){
+				$public	= true;
+				break;
+			}
 		}
 	}
 
