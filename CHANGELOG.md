@@ -7,6 +7,7 @@
 ### Changed
 - coverted to plugin with classes
 - plugin name
+- sim prefix to tsjippy prefix
 
 ### Fixed
 - admin page settings
