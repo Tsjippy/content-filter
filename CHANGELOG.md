@@ -8,6 +8,7 @@
 - coverted to plugin with classes
 - plugin name
 - sim prefix to tsjippy prefix
+- base namespace to TSJIPPY
 
 ### Fixed
 - admin page settings
