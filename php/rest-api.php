@@ -1,6 +1,6 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
 use WP_Error;
 
 //Secure the rest api
@@ -16,7 +16,7 @@ function authenticationErrors( $result ) {
 		// Our custom authentication check should have no effect on logged-in requests
 		return $result;
     }else{
-		$loginUrl 	= wp_login_url(SIM\getCurrentUrl());
+		$loginUrl 	= wp_login_url(TSJIPPY\getCurrentUrl());
 
 		$message	= apply_filters('tsjippy-content-filter-rest-not-logged-in-message', "You should be logged in to perform this request.<br>Login <a href='$loginUrl'>here</a>");
 

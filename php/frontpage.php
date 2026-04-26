@@ -1,6 +1,6 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
 
 add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__.'\postGalleryPosts', 10, 2);
 function postGalleryPosts($args, $postTypes){

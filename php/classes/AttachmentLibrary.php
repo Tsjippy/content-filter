@@ -1,6 +1,6 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -113,7 +113,7 @@ class AttachmentLibrary{
             wp_generate_attachment_metadata($postId, "$newPath/$filename");
         }
 
-        SIM\urlUpdate(str_replace($filename, $baseName, $oldPath), "$newPath/$baseName");
+        TSJIPPY\urlUpdate(str_replace($filename, $baseName, $oldPath), "$newPath/$baseName");
     }
 
     /**
@@ -150,7 +150,7 @@ class AttachmentLibrary{
 
         if($default == 'private' && !str_contains($file['file'], 'private')){
             $newPath    = wp_upload_dir()['basedir'].'/private/'.basename($file['file']);
-            $newUrl     = SIM\pathToUrl($newPath);
+            $newUrl     = TSJIPPY\pathToUrl($newPath);
 
             rename($file['file'], $newPath);
 

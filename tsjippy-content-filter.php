@@ -1,5 +1,5 @@
 <?php
-namespace SIM\CONTENTFILTER;
+namespace TSJIPPY\CONTENTFILTER;
 
 /**
  * Plugin Name:  		Tsjippy Content Filter
@@ -13,6 +13,7 @@ namespace SIM\CONTENTFILTER;
  * Plugin URI:			https://github.com/Tsjippy/contentfilter/
  * Tested:				6.9
  * TextDomain:			tsjippy
+ * Requires Plugins:	tsjippy-shared-functionality
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
@@ -28,6 +29,7 @@ $pluginData = get_plugin_data(__FILE__, false, false);
 define(__NAMESPACE__ .'\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ .'\PLUGINPATH', __DIR__.'/');
 define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
+define(__NAMESPACE__ .'\PLUGINSLUG', basename(__FILE__, '.php'));
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_contentfilter_settings', []));
 
 // run on activation

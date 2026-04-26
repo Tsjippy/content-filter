@@ -1,6 +1,6 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
 
 // Make partial page contents filterable
 add_shortcode( 'content_filter', __NAMESPACE__.'\renderContentFilterShortcode');

@@ -1,6 +1,6 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
 
 // Kill the page load if the page is protected
 add_action('wp_body_open', __NAMESPACE__.'\killPageLoad');
@@ -91,7 +91,7 @@ function loopEnd(){
 	// If not a valid e-mail then only allow the account page to reset the email
 	if(str_contains($user->user_email, ".empty") && !$public && !is_search() && !is_home() && !str_contains($_SERVER['REQUEST_URI'], 'account') ){
 		ob_get_clean();
-		$accountUrl		= SIM\ADMIN\getDefaultPageLink('usermanagement', 'account_page');
+		$accountUrl		= TSJIPPY\ADMIN\getDefaultPageLink('usermanagement', 'account_page');
 		echo "<div class='error'>Your e-mail address is not valid please change it <a href='$accountUrl/?section=generic'>here</a>.</div>";
 		return;
 	}
@@ -109,7 +109,7 @@ function loopEnd(){
 add_action('init', __NAMESPACE__.'\init');
 function init(){
 	// do not run during rest request
-    if(SIM\isRestApiRequest()){
+    if(TSJIPPY\isRestApiRequest()){
         return;
     }
 	

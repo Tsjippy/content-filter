@@ -1,7 +1,7 @@
 <?php
-namespace SIM\CONTENTFILTER;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\CONTENTFILTER;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -44,7 +44,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         <br>
         <?php
 
-        SIM\addRawHtml(ob_get_clean(), $parent);
+        TSJIPPY\addRawHtml(ob_get_clean(), $parent);
 
         return true;
     }
