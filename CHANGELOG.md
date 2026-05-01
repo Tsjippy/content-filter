@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.0.0] - 2026-05-01
+
+
+### Added
 - trailing slash to pluginpath connstant
 - redirection to settings page on plugin activation
 
@@ -19,8 +30,6 @@
 - bug in constants
 - pkugin activation
 - pluginpath constant
-
-### Updated
 
 ## [8.1.4] - 2025-12-02
 
