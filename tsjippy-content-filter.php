@@ -32,16 +32,10 @@ define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
 define(__NAMESPACE__ .'\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, '.php')));
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_contentfilter_settings', []));
 
-// run on activation
+// run right before activation
 register_activation_hook( __FILE__, function(){
     //Create a public category if it does not exist
 	wp_create_category('Public');
 	wp_create_category('Confidential');
 } );
 
-add_action( 'activated_plugin', function($plugin){
-	// Redirect to settings page after plugin activation
-    if($plugin == PLUGIN && wp_safe_redirect( esc_url(admin_url('admin.php?page=tsjippy-'.PLUGINSLUG) )  ) ){
-		exit();
-	}
-});
