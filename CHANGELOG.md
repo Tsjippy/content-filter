@@ -2,7 +2,6 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- theme hook
 
 ### Changed
 
