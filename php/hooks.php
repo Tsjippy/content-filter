@@ -52,3 +52,18 @@ function addAttachment( $postId) {
 
     return $attachmentLibrary->addAttachment($postId );
 }
+
+add_filter('tsjippy-theme-news-query', function($args, $user){
+    //Hide confidential items on the front page    
+    if(array_intersect(SETTINGS['confidential-roles'] ?? [], $user->roles)){
+        $args['tax_query'][] =
+            array(
+                'taxonomy' => 'events',
+                'field'    => 'term_id',
+                'terms'    => [get_cat_ID('Confidential')],
+                'operator' => 'NOT IN'
+            );
+    }
+
+    return $args;
+}, 10, 2);
