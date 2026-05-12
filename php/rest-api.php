@@ -5,6 +5,15 @@ use WP_Error;
 
 //Secure the rest api
 add_filter( 'rest_authentication_errors', __NAMESPACE__.'\authenticationErrors');
+/**
+ * Checks if the user is logged in for rest api calls. If not, an error is returned. Some exceptions can be made by using the tsjippy_allowed_rest_api_urls filter.
+ * 
+ * @since 10.1.0
+ * 
+ * @param WP_Error|bool $result The result of the authentication check. Either true if the request is authenticated, false if not, or a WP_Error object if an error has occurred.
+ * 
+ * @return WP_Error|bool The result of the authentication check. Either true if the request is authenticated, false if not, or a WP_Error object if an error has occurred.
+ */
 function authenticationErrors( $result ) {
     // If a previous authentication check was applied, pass that result along without modification.
     if ( true === $result || is_wp_error( $result ) ) {
