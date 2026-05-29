@@ -2,6 +2,8 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
+ if ( ! defined( 'ABSPATH' ) ) exit;
+
 // Kill the page load if the page is protected
 add_action('wp_body_open', __NAMESPACE__.'\killPageLoad');
 function killPageLoad(){
@@ -10,8 +12,7 @@ function killPageLoad(){
 	if($wp_query->is_main_query() && isProtected()){
 		echo ob_get_clean();
 
-		$message 	= 'This content is restricted. <br>You will be able to see this page as soon as you login.';
-		wp_die($message, 'This content is restricted.');
+		wp_die('This content is restricted. <br>You will be able to see this page as soon as you login.', 'This content is restricted.');
 
 		print_footer_scripts();
 		exit;
@@ -93,7 +94,7 @@ function loopEnd(){
 	}
 	
 	// If not a valid e-mail then only allow the account page to reset the email
-	if(str_contains($user->user_email, ".empty") && !$public && !is_search() && !is_home() && !str_contains($_SERVER['REQUEST_URI'], 'account') ){
+	if(str_contains($user->user_email, ".empty") && !$public && !is_search() && !is_home() && !str_contains($_SERVER['REQUEST_URI'] ?? '', 'account') ){
 		ob_get_clean();
 
 		$url			= '';
@@ -103,7 +104,13 @@ function loopEnd(){
 				$url	= '';
 			}
 		}
-		echo "<div class='error'>Your e-mail address is not valid please change it <a href='$url/?section=generic'>here</a>.</div>";
+		
+		?>
+		<div class='error'>
+			Your e-mail address is not valid please change it <a href='<?php echo esc_url($url);?>/?section=generic'>here</a>.
+		</div>
+		<?php
+
 		return;
 	}
 	

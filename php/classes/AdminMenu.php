@@ -39,8 +39,8 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 foreach($roles as $key=>$role){
                     ?>
                     <label>
-                        <input type="checkbox" name="confidential-roles[]" value="<?php echo $key;?>" <?php echo isset($this->settings['confidential-roles']) && is_array($this->settings['confidential-roles']) && in_array($key, $this->settings['confidential-roles']) ? 'checked' : '';?>>
-                        <?php echo $role;?>
+                        <input type="checkbox" name="confidential-roles[]" value="<?php echo esc_attr($key);?>" <?php echo in_array($key, $this->settings['confidential-roles'] ?? []) ? 'checked' : '';?>>
+                        <?php echo esc_html($role);?>
                     </label>
                     <br>
                     <?php

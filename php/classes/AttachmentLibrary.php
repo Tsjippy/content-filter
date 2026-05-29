@@ -13,30 +13,26 @@ class AttachmentLibrary{
     public function fieldsToEdit($formFields, $post ){
         $fieldValue = get_post_meta( $post->ID, 'visibility', true );
 
-        if($fieldValue == 'public' || empty($fieldValue)){
-            $checked    = 'checked';
-        }
+        ob_start();
 
-        $html    = "<div>";
-            $html   .= "<input $checked style='width: initial' type='radio' name='attachments[{$post->ID}][visibility]' value='public'>";
-            $html   .= " Public";
-        $html   .= "</div>";
+        ?>
+        <div>
+            <input <?php if($fieldValue == 'public' || empty($fieldValue)){ echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='public'>
+             Public
+        </div>
 
-        $checked    = '';
-        if($fieldValue == 'private'){
-            $checked    = 'checked';
-        }
+        <div>
+            <input <?php if($fieldValue == 'private'){ echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='private'>
+             Private
+        </div>
 
-        $html   .= "<div>";
-            $html   .= "<input $checked style='width: initial' type='radio' name='attachments[{$post->ID}][visibility]' value='private'>";
-            $html   .= " Private";
-        $html   .= "</div>";
+        <?php
 
         $formFields['visibility'] = array(
             'value' => $fieldValue ? $fieldValue : '',
-            'label' => __( 'Visibility' ),
+            'label' => __( 'Visibility', 'tsjippy'),
             'input' => 'html',
-            'html'  =>  $html
+            'html'  =>  ob_get_clean(),
         );
 
         return $formFields;
@@ -47,7 +43,7 @@ class AttachmentLibrary{
      */
     public function editAttachment($attachmentId){
         if ( isset( $_REQUEST['attachments'][$attachmentId]['visibility'] ) ) {
-            $visibility     = $_REQUEST['attachments'][$attachmentId]['visibility'];
+            $visibility     = sanitize_text_field(wp_unslash($_REQUEST['attachments'][$attachmentId]['visibility']));
 
             //check if changed
             $prevVis        = get_post_meta( $attachmentId, 'visibility',true);
@@ -102,8 +98,10 @@ class AttachmentLibrary{
         
         //Move all the files to the private folder
         $files = glob("$baseDir/$baseName*");
+        $wpFileSystem   = TSJIPPY\loadWpFileSystem();
+
         foreach($files as $file){
-            rename($file, "$newPath/".basename ($file));
+            $wpFileSystem->move($file, "$newPath/".basename ($file));
         }
 
         if($generate){
@@ -121,7 +119,8 @@ class AttachmentLibrary{
      */
     public function attachmentArgs($query){
         if(!empty($_REQUEST['query']['visibility'])){
-            $visibility = $_REQUEST['query']['visibility'];
+            $visibility = sanitize_text_field(wp_unslash($_REQUEST['query']['visibility']));
+            
             $query['meta_query'] = [
                 [
                     'key'     => 'visibility',
@@ -152,7 +151,8 @@ class AttachmentLibrary{
             $newPath    = wp_upload_dir()['basedir'].'/private/'.basename($file['file']);
             $newUrl     = TSJIPPY\pathToUrl($newPath);
 
-            rename($file['file'], $newPath);
+            $wpFileSystem  = TSJIPPY\loadWpFileSystem();
+            $wpFileSystem->move($file['file'], $newPath);
 
             $file['file']   = $newPath;
             $file['url']    = $newUrl;

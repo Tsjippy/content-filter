@@ -2,6 +2,8 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 // Make partial page contents filterable
 add_shortcode( 'content_filter', __NAMESPACE__.'\renderContentFilterShortcode');
 function renderContentFilterShortcode( $atts = array(), $content = null ) {

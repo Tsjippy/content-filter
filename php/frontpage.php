@@ -2,6 +2,8 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__.'\postGalleryPosts', 10, 2);
 function postGalleryPosts($args, $postTypes){
     if(is_user_logged_in()){

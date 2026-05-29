@@ -2,6 +2,8 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * AJAX Search Lite filters
  */

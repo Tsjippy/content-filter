@@ -3,6 +3,8 @@ namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 //Secure the rest api
 add_filter( 'rest_authentication_errors', __NAMESPACE__.'\authenticationErrors');
 /**
@@ -31,7 +33,7 @@ function authenticationErrors( $result ) {
 
 		$data		= apply_filters('tsjippy-content-filter-rest-not-logged-in-data', array( 'status' => rest_authorization_required_code() ));
 
-		return new WP_Error( 'content filter', __( $message ), $data );
+		return new WP_Error( 'content filter', __( $message, 'tsjippy' ), $data );
 	}
 }
 
@@ -44,7 +46,7 @@ function isAllowedRestApiUrl(){
 	$urls	= apply_filters('tsjippy_allowed_rest_api_urls', $urls);
 
 	foreach($urls as $url){
-		if(str_contains($_SERVER['REQUEST_URI'], $url)){
+		if(str_contains($_SERVER['REQUEST_URI'] ?? '', $url)){
 			return true;
 		}
 	}
