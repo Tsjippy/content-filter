@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- if ( ! defined( 'ABSPATH' ) ) exit; to all files
 
 ### Changed
 - do not store get_plugin_data in global variable
