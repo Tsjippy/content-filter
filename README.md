@@ -1,4 +1,4 @@
-This module filters all content to be only available to logged-in users.<br>
+This plugin filters all content to be only available to logged-in users.<br>
 Only content with the public category is visible to non-logged-in users.<br>
 It also makes it possible to move files to a private folder so that it is not directly accessable.<br>
 <br>
