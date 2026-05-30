@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.0.9] - 2026-05-30
+
+
+### Added
 - if ( ! defined( 'ABSPATH' ) ) exit; to all files
 
 ### Changed
 - do not store get_plugin_data in global variable
 - updated readme
-
-### Fixed
-
-### Updated
 
 ## [10.0.8] - 2026-05-22
 
