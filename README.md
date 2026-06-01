@@ -7,3 +7,13 @@ This shortcode has two properties: roles and inversed.<br>
 Roles define the roles who can see the content.<br>
 If inversed is set to true, roles define the roles who cannot see the content.<br>
 Use like this: <code>[content_filter roles='administrator, otherroles']This has limited visibility[/content_filter]</code>
+
+== Hooks ==
+# FILTERS
+- apply_filters('tsjippy_allowed_rest_api_urls', $urls);
+- apply_filters('tsjippy-content-filter-rest-not-logged-in-message', "You should be logged in to perform this request.<br>Login <a href='$loginUrl'>here</a>");
+- apply_filters('tsjippy-content-filter-rest-not-logged-in-data', array( 'status' => rest_authorization_required_code() ));
+
+
+# Actions
+- tsjippy-content-filter-reset-page
