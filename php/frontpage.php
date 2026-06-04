@@ -2,35 +2,35 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
-add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__.'\postGalleryPosts', 10, 2);
-function postGalleryPosts($args, $postTypes){
-    if(is_user_logged_in()){
+add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__ . '\postGalleryPosts', 10, 2);
+function postGalleryPosts($args, $postTypes) {
+    if (is_user_logged_in()) {
         return $args;
     }
 
     // Build the sub-query for public cats
     $publicQuery    = ['relation' => 'OR'];
-    foreach($postTypes as $type){
-        $taxonomies = get_object_taxonomies( $type );
+    foreach ($postTypes as $type) {
+        $taxonomies = get_object_taxonomies($type);
 
-        foreach($taxonomies as $tax){
+        foreach ($taxonomies as $tax) {
             $publicQuery[]  = array(
                 'taxonomy' => $tax,
                 'field'    => 'slug',
-                'terms'    => array( 'public' ),
-            );
+                'terms'    => array('public'),
+           );
         }
     }
 
     // create a nested tax query
-    if(isset($args['tax_query'])){
+    if (isset($args['tax_query'])) {
         $args['tax_query']  = array(
             'relation' => 'AND',
             $publicQuery,
             $args['tax_query']
-        );
+       );
     }else{
         $args['tax_query'] = $publicQuery;
     }

@@ -2,27 +2,27 @@
 namespace TSJIPPY\CONTENTFILTER;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class AttachmentLibrary{
     /**
      * add public/private radio buttons to attachment page
      */
-    public function fieldsToEdit($formFields, $post ){
-        $fieldValue = get_post_meta( $post->ID, 'visibility', true );
+    public function fieldsToEdit($formFields, $post) {
+        $fieldValue = get_post_meta($post->ID, 'visibility', true);
 
         ob_start();
 
         ?>
         <div>
-            <input <?php if($fieldValue == 'public' || empty($fieldValue)){ echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='public'>
+            <input <?php if ($fieldValue == 'public' || empty($fieldValue)) { echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='public'>
              Public
         </div>
 
         <div>
-            <input <?php if($fieldValue == 'private'){ echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='private'>
+            <input <?php if ($fieldValue == 'private') { echo 'checked';}?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][visibility]' value='private'>
              Private
         </div>
 
@@ -33,7 +33,7 @@ class AttachmentLibrary{
             'label' => __( 'Visibility', 'tsjippy'),
             'input' => 'html',
             'html'  =>  ob_get_clean(),
-        );
+       );
 
         return $formFields;
     }
@@ -41,26 +41,26 @@ class AttachmentLibrary{
     /**
      * change visibility of an attachment
      */
-    public function editAttachment($attachmentId){
-        if ( isset( $_REQUEST['attachments'][$attachmentId]['visibility'] ) ) {
+    public function editAttachment($attachmentId) {
+        if ( isset($_REQUEST['attachments'][$attachmentId]['visibility'])) {
             $visibility     = sanitize_text_field(wp_unslash($_REQUEST['attachments'][$attachmentId]['visibility']));
 
             //check if changed
-            $prevVis        = get_post_meta( $attachmentId, 'visibility',true);
+            $prevVis        = get_post_meta($attachmentId, 'visibility',true);
 
-            if($prevVis != $visibility){
+            if ($prevVis != $visibility) {
                 do_action('tsjippy_before_visibility_change', $attachmentId, $visibility);
 
                 //update post meta
-                update_metadata( 'post', $attachmentId, 'visibility', $visibility );
+                update_metadata('post', $attachmentId, 'visibility', $visibility);
 
                 //Check if moving to public or to private
-                if($visibility == 'public'){
+                if ($visibility == 'public') {
                     $targetPath = '';
                 }else{
                     $targetPath = 'private';
                 }
-                
+
                 $this->moveAttachment($attachmentId, $targetPath);
             }
         }
@@ -68,25 +68,25 @@ class AttachmentLibrary{
 
     /**
      * Move attachment to other folder
-     * @param  	int 	$postId		    WP_Post id
-     * @param  	string	$subDir   	    The sub folder where the files should be uploaded
+     * @param      int     $postId            WP_Post id
+     * @param      string    $subDir           The sub folder where the files should be uploaded
     */
-    public function moveAttachment($postId, $subDir, $generate=true){
-        if(empty($subDir)){
+    public function moveAttachment($postId, $subDir, $generate=true) {
+        if (empty($subDir)) {
             $newPath   = wp_upload_dir()['basedir'];
         }else{
-            $newPath   = wp_upload_dir()['basedir']."/$subDir";
-            $subDir     = rtrim($subDir,"/").'/';
+            $newPath   = wp_upload_dir()['basedir']. "/$subDir";
+            $subDir     = rtrim($subDir,"/"). '/';
         }
 
         //get the file location of the attachment
         $oldPath   = get_attached_file($postId);
-        if(!file_exists($oldPath)){
+        if (!file_exists($oldPath)) {
             return false;
         }
 
         $filename   = basename ($oldPath);
-        $extension  = '.'.pathinfo($oldPath, PATHINFO_EXTENSION);
+        $extension  = ' . ' .pathinfo($oldPath, PATHINFO_EXTENSION);
         $baseDir    = dirname($oldPath);
         $baseName   = str_replace(["-scaled", $extension], "", $filename);
 
@@ -94,19 +94,19 @@ class AttachmentLibrary{
         update_attached_file($postId, "$newPath/$filename");
 
         //update main path
-        update_metadata( 'post', $postId, '_wp_attached_file', $subDir.$filename);
-        
+        update_metadata('post', $postId, '_wp_attached_file', $subDir.$filename);
+
         //Move all the files to the private folder
         $files = glob("$baseDir/$baseName*");
         $wpFileSystem   = TSJIPPY\loadWpFileSystem();
 
-        foreach($files as $file){
-            $wpFileSystem->move($file, "$newPath/".basename ($file));
+        foreach ($files as $file) {
+            $wpFileSystem->move($file, "$newPath/" .basename ($file));
         }
 
-        if($generate){
-            if(!function_exists('wp_generate_attachment_metadata')){
-                require_once(ABSPATH.'/wp-admin/includes/image.php');
+        if ($generate) {
+            if (!function_exists('wp_generate_attachment_metadata')) {
+                require_once(ABSPATH. '/wp-admin/includes/image.php');
             }
             wp_generate_attachment_metadata($postId, "$newPath/$filename");
         }
@@ -117,10 +117,10 @@ class AttachmentLibrary{
     /**
      * Filter library if needed
      */
-    public function attachmentArgs($query){
-        if(!empty($_REQUEST['query']['visibility'])){
+    public function attachmentArgs($query) {
+        if (!empty($_REQUEST['query']['visibility'])) {
             $visibility = sanitize_text_field(wp_unslash($_REQUEST['query']['visibility']));
-            
+
             $query['meta_query'] = [
                 [
                     'key'     => 'visibility',
@@ -129,7 +129,7 @@ class AttachmentLibrary{
                 ]
             ];
 
-            if($visibility == 'public'){
+            if ($visibility == 'public') {
                 $query['meta_query']['relation'] = 'OR';
                 $query['meta_query'][] = [
                     'key'     => 'visibility',
@@ -144,11 +144,11 @@ class AttachmentLibrary{
     /**
      * Move the file to the private dird
      */
-    function handleUpload($file){
+    function handleUpload($file) {
         $default    = SETTINGS['default-status'] ?? 'private';
 
-        if($default == 'private' && !str_contains($file['file'], 'private')){
-            $newPath    = wp_upload_dir()['basedir'].'/private/'.basename($file['file']);
+        if ($default == 'private' && !str_contains($file['file'], 'private')) {
+            $newPath    = wp_upload_dir()['basedir']. '/private/' .basename($file['file']);
             $newUrl     = TSJIPPY\pathToUrl($newPath);
 
             $wpFileSystem  = TSJIPPY\loadWpFileSystem();
@@ -164,11 +164,11 @@ class AttachmentLibrary{
     /**
      * Set the visibility key
      */
-    public function addAttachment( $postId) {
+    public function addAttachment($postId) {
         $default    = SETTINGS['default-status'] ?? 'private';
 
-        if($default == 'private'){
-            update_metadata( 'post',  $postId, 'visibility', 'private' );
+        if ($default == 'private') {
+            update_metadata('post',  $postId, 'visibility', 'private');
         }
     }
 }
