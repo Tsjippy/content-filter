@@ -1,19 +1,22 @@
 <?php
+
 namespace TSJIPPY\CONTENTFILTER;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 // Make partial page contents filterable
 add_shortcode('content_filter', __NAMESPACE__ . '\renderContentFilterShortcode');
-function renderContentFilterShortcode($atts = array(), $content = null) {
+function renderContentFilterShortcode($atts = array(), $content = null)
+{
     $a = shortcode_atts(array(
         'inversed' => false,
         'roles' => "All",
-   ), $atts);
+    ), $atts);
 
     $inversed         = $a['inversed'];
-    $allowedRoles     = explode(',',$a['roles']);
+    $allowedRoles     = explode(',', $a['roles']);
     $return = false;
 
     //Get the current user

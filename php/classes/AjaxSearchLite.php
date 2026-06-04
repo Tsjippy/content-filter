@@ -1,18 +1,22 @@
 <?php
+
 namespace TSJIPPY\CONTENTFILTER;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class AjaxSearchLite{
+class AjaxSearchLite
+{
 
     /**
      * Only search in posts with the public category
      */
-    public function limitSearchToPublic($querystr, $args, $id, $_ajax_search) {
-        if ( !is_user_logged_in()) {
+    public function limitSearchToPublic($querystr, $args, $id, $_ajax_search)
+    {
+        if (!is_user_logged_in()) {
             // Calculate the current term query
             $current    = $this->buildTermQuery($args);
 
@@ -29,30 +33,31 @@ class AjaxSearchLite{
         return $querystr;
     }
 
-    public function buildTermQuery($args) {
+    public function buildTermQuery($args)
+    {
         global $wpdb;
         $postIdField      = $wpdb->posts . ' .ID';
         $postTypeField    = $wpdb->posts . ' .post_type';
 
-        if ( isset($_GET['ignore_op'])) {
+        if (isset($_GET['ignore_op'])) {
             return '';
         }
 
         $termQuery       = '';
         $termQueryParts = array();
 
-        foreach ( $args['post_tax_filter'] as $k => $item) {
+        foreach ($args['post_tax_filter'] as $k => $item) {
             $taxTermQuery = '';
             $taxonomy       = $item['taxonomy'];
 
             // Is there an argument set to allow empty items for this taxonomy filter?
-            if ( isset($item['allow_empty'])) {
+            if (isset($item['allow_empty'])) {
                 $allowEmptyTaxTerm = $item['allow_empty'];
             } else {
                 $allowEmptyTaxTerm = $taxonomy == 'post_tag' ? $args['_post_tags_empty'] : $args['_post_allowEmptyTaxTerm'];
             }
 
-            if ( $allowEmptyTaxTerm == 1) {
+            if ($allowEmptyTaxTerm == 1) {
                 $emptyTermsQuery = "
                 NOT EXISTS (
                     SELECT *
@@ -69,7 +74,7 @@ class AjaxSearchLite{
             // .. MAIN SELECT: selects all object_ids that are not in the array
             // .. SUBSELECT:   excludes all the object_ids that are part of the array
             // This is used because of multiple object_ids (posts in more than 1 tag)
-            if ( !empty($item['exclude'])) {
+            if (!empty($item['exclude'])) {
                 $words          = implode(',', $item['exclude']);
                 $taxTermQuery = " (
                     $emptyTermsQuery
@@ -89,12 +94,12 @@ class AjaxSearchLite{
                                    )
                                )";
             }
-            if ( !empty($item['include'])) {
+            if (!empty($item['include'])) {
                 $words = implode(',', $item['include']);
-                if ( !empty($taxTermQuery)) {
+                if (!empty($taxTermQuery)) {
                     $taxTermQuery .= ' AND ';
                 }
-                if ( isset($item['logic']) && $item['logic'] == 'andex') {
+                if (isset($item['logic']) && $item['logic'] == 'andex') {
                     $taxTermQuery .= "(
                         $emptyTermsQuery
 
@@ -128,7 +133,7 @@ class AjaxSearchLite{
                 $args['_post_tags_active'] == 1 &&
                 $taxTermQuery == '' &&
                 $args['_post_tags_empty'] == 0
-           ) {
+            ) {
                 $taxTermQuery = "
                 (
                     ($postTypeField != 'post') OR
@@ -144,12 +149,12 @@ class AjaxSearchLite{
             }
             // ----------------------------------------------------
 
-            if ( !empty($taxTermQuery)) {
+            if (!empty($taxTermQuery)) {
                 $termQueryParts[] = '(' . $taxTermQuery . ')';
             }
         }
 
-        if ( !empty($termQueryParts)) {
+        if (!empty($termQueryParts)) {
             $termQuery = 'AND (' . implode(' ' . strtoupper($args['_taxonomy_group_logic']) . ' ', $termQueryParts) . ') ';
         }
 

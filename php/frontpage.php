@@ -1,11 +1,14 @@
 <?php
+
 namespace TSJIPPY\CONTENTFILTER;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 add_filter('tsjippy-frontpage-post-gallery-posts', __NAMESPACE__ . '\postGalleryPosts', 10, 2);
-function postGalleryPosts($args, $postTypes) {
+function postGalleryPosts($args, $postTypes)
+{
     if (is_user_logged_in()) {
         return $args;
     }
@@ -20,7 +23,7 @@ function postGalleryPosts($args, $postTypes) {
                 'taxonomy' => $tax,
                 'field'    => 'slug',
                 'terms'    => array('public'),
-           );
+            );
         }
     }
 
@@ -30,8 +33,8 @@ function postGalleryPosts($args, $postTypes) {
             'relation' => 'AND',
             $publicQuery,
             $args['tax_query']
-       );
-    }else{
+        );
+    } else {
         $args['tax_query'] = $publicQuery;
     }
 

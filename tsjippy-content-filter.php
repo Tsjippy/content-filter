@@ -1,4 +1,5 @@
 <?php
+
 namespace TSJIPPY\CONTENTFILTER;
 
 /**
@@ -19,7 +20,7 @@ namespace TSJIPPY\CONTENTFILTER;
  *
  * @author Ewald Harmsen
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -38,4 +39,3 @@ register_activation_hook(__FILE__, function () {
     wp_create_category('Public');
     wp_create_category('Confidential');
 });
-

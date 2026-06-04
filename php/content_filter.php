@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\CONTENTFILTER;
+
 use TSJIPPY;
 
- if ( ! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 // Kill the page load if the page is protected
 add_action('wp_body_open', __NAMESPACE__ . '\killPageLoad');
-function killPageLoad() {
+function killPageLoad()
+{
     global $wp_query;
 
     if ($wp_query->is_main_query() && isProtected()) {
@@ -20,8 +23,9 @@ function killPageLoad() {
 }
 
 // Add meta tag so this page is not indexed by search machines
-add_action ( 'wp_head', __NAMESPACE__ . '\wpHead');
-function wpHead() {
+add_action('wp_head', __NAMESPACE__ . '\wpHead');
+function wpHead()
+{
     if (isProtected()) {
         echo '<meta name="robots" content="noindex, nofollow">';
     }
@@ -29,7 +33,8 @@ function wpHead() {
 
 // Discourage robots
 add_filter('robots_txt', __NAMESPACE__ . '\robotsText', 10, 2);
-function robotsText($output, $public) {
+function robotsText($output, $public)
+{
     $output    .= "User-agent: *\n";
     $output    .= "Disallow: /wp-content/\n";
 
@@ -41,7 +46,8 @@ function robotsText($output, $public) {
  *
  * @return    boolean        false if visible, true if protected
  */
-function isProtected() {
+function isProtected()
+{
     global    $post;
 
     $public                = false;
@@ -61,7 +67,7 @@ function isProtected() {
         !$public                            &&
         !is_search()                        &&
         !is_home()
-   ) {
+    ) {
         return true;
     }
 
@@ -70,13 +76,15 @@ function isProtected() {
 
 // Add a login button if the user is not logged in and the current page is only for logged in users
 add_filter('tsjippy_add_login_button', __NAMESPACE__ . '\loginButton');
-function loginButton($show) {
+function loginButton($show)
+{
 
     return !isProtected();
 }
 
 add_action('get_footer', __NAMESPACE__ . '\loopEnd');
-function loopEnd() {
+function loopEnd()
+{
     global    $post;
     $user                = wp_get_current_user();
     $taxonomies            = get_post_taxonomies();
@@ -105,11 +113,11 @@ function loopEnd() {
             }
         }
 
-        ?>
+?>
         <div class='error'>
-            Your e-mail address is not valid please change it <a href='<?php echo esc_url($url);?>/?section=generic'>here</a>.
+            Your e-mail address is not valid please change it <a href='<?php echo esc_url($url); ?>/?section=generic'>here</a>.
         </div>
-        <?php
+<?php
 
         return;
     }
@@ -125,7 +133,8 @@ function loopEnd() {
 
 //Make sure is_user_logged_in function is available by only running this when init
 add_action('init', __NAMESPACE__ . '\init');
-function init() {
+function init()
+{
     // do not run during rest request
     if (TSJIPPY\isRestApiRequest()) {
         return;
@@ -135,14 +144,15 @@ function init() {
     add_action('pre_get_posts', __NAMESPACE__ . '\preNewsPosts');
 }
 
-function preNewsPosts($query) {
-    if ( $query->is_home() && $query->is_main_query()) {
-        if ( !is_user_logged_in()) {
+function preNewsPosts($query)
+{
+    if ($query->is_home() && $query->is_main_query()) {
+        if (!is_user_logged_in()) {
             //Only show items with the public category
             $query->set('cat', get_cat_ID('Public'));
             //Only show the items without a password
             $query->set('has_password', false);
-        }else{
+        } else {
             $user = wp_get_current_user();
 
             $confidentialGroups    = SETTINGS['confidential-roles'] ?? [];
@@ -156,7 +166,8 @@ function preNewsPosts($query) {
 
 //Only show public search results for non-loggedin users
 add_filter('pre_get_posts', __NAMESPACE__ . '\prePosts');
-function prePosts($query) {
+function prePosts($query)
+{
     if ($query->is_search &&  !is_user_logged_in()) {
         $query->set('cat', get_cat_ID('Public'));
     }
