@@ -102,7 +102,7 @@ function loopEnd()
     }
 
     // If not a valid e-mail then only allow the account page to reset the email
-    if (str_contains($user->user_email, " .empty") && !$public && !is_search() && !is_home() && !str_contains($_SERVER['REQUEST_URI'] ?? '', 'account')) {
+    if (str_contains($user->user_email, ".empty") && !$public && !is_search() && !is_home() && !str_contains($_SERVER['REQUEST_URI'] ?? '', 'account')) {
         ob_get_clean();
 
         $url            = '';

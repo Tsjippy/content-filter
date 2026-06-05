@@ -36,8 +36,8 @@ class AjaxSearchLite
     public function buildTermQuery($args)
     {
         global $wpdb;
-        $postIdField      = $wpdb->posts . ' .ID';
-        $postTypeField    = $wpdb->posts . ' .post_type';
+        $postIdField      = $wpdb->posts . '.ID';
+        $postTypeField    = $wpdb->posts . '.post_type';
 
         if (isset($_GET['ignore_op'])) {
             return '';
