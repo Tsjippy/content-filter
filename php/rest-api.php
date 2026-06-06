@@ -44,7 +44,7 @@ function isAllowedRestApiUrl()
 {
     $urls    = [
         'wp-mail-smtp/v1',
-        RESTAPIPREFIX . '/fetch_nonce'
+        TSJIPPY\RESTAPIPREFIX . '/fetch_nonce'
     ];
 
     $urls    = apply_filters('tsjippy_allowed_rest_api_urls', $urls);
