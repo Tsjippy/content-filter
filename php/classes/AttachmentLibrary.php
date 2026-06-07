@@ -55,7 +55,7 @@ class AttachmentLibrary
             return;
         }
 
-        $visibility     = sanitize_text_field(wp_unslash($_REQUEST['attachments'][$attachmentId]['visibility']));
+        $visibility     = TSJIPPY\sanitize($_REQUEST['attachments'][$attachmentId]['visibility']);
 
         //check if changed
         $prevVis        = get_post_meta($attachmentId, 'visibility', true);
@@ -132,7 +132,7 @@ class AttachmentLibrary
     public function attachmentArgs($query)
     {
         if (!empty($_REQUEST['query']['visibility'])) {
-            $visibility = sanitize_text_field(wp_unslash($_REQUEST['query']['visibility']));
+            $visibility = TSJIPPY\sanitize($_REQUEST['query']['visibility']);
 
             $query['meta_query'] = [
                 [
