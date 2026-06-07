@@ -9,6 +9,7 @@
 - code layout
 - namespaced all constants
 - code layout
+- sanitize all posts and get vars
 
 ### Fixed
 - spacing problem
