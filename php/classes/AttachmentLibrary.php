@@ -51,27 +51,29 @@ class AttachmentLibrary
      */
     public function editAttachment($attachmentId)
     {
-        if (isset($_REQUEST['attachments'][$attachmentId]['visibility'])) {
-            $visibility     = sanitize_text_field(wp_unslash($_REQUEST['attachments'][$attachmentId]['visibility']));
+        if (!isset($_REQUEST['attachments'][$attachmentId]['visibility'])) {
+            return;
+        }
 
-            //check if changed
-            $prevVis        = get_post_meta($attachmentId, 'visibility', true);
+        $visibility     = sanitize_text_field(wp_unslash($_REQUEST['attachments'][$attachmentId]['visibility']));
 
-            if ($prevVis != $visibility) {
-                do_action('tsjippy_before_visibility_change', $attachmentId, $visibility);
+        //check if changed
+        $prevVis        = get_post_meta($attachmentId, 'visibility', true);
 
-                //update post meta
-                update_metadata('post', $attachmentId, 'visibility', $visibility);
+        if ($prevVis != $visibility) {
+            do_action('tsjippy_before_visibility_change', $attachmentId, $visibility);
 
-                //Check if moving to public or to private
-                if ($visibility == 'public') {
-                    $targetPath = '';
-                } else {
-                    $targetPath = 'private';
-                }
+            //update post meta
+            update_metadata('post', $attachmentId, 'visibility', $visibility);
 
-                $this->moveAttachment($attachmentId, $targetPath);
+            //Check if moving to public or to private
+            if ($visibility == 'public') {
+                $targetPath = '';
+            } else {
+                $targetPath = 'private';
             }
+
+            $this->moveAttachment($attachmentId, $targetPath);
         }
     }
 

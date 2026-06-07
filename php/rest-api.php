@@ -36,7 +36,7 @@ function authenticationErrors($result)
 
         $data        = apply_filters('tsjippy-content-filter-rest-not-logged-in-data', array('status' => rest_authorization_required_code()));
 
-        return new WP_Error('content filter', __($message, 'tsjippy'), $data);
+        return new WP_Error('content filter', $message, $data);
     }
 }
 
