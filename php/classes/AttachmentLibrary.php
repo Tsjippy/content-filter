@@ -38,7 +38,7 @@ class AttachmentLibrary
 
         $formFields['visibility'] = array(
             'value' => $fieldValue ? $fieldValue : '',
-            'label' => __('Visibility', 'tsjippy'),
+            'label' => __('Visibility', '%TEXTDOMAIN%'),
             'input' => 'html',
             'html'  =>  ob_get_clean(),
         );
