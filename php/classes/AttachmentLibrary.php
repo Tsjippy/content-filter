@@ -15,7 +15,7 @@ class AttachmentLibrary
      */
     public function fieldsToEdit($formFields, $post)
     {
-        $fieldValue = get_post_meta($post->ID, 'visibility', true);
+        $fieldValue = get_post_meta($post->ID, 'tsjippy_visibility', true);
 
         ob_start();
 
@@ -58,13 +58,13 @@ class AttachmentLibrary
         $visibility     = TSJIPPY\sanitize($_REQUEST['attachments'][$attachmentId]['visibility']);
 
         //check if changed
-        $prevVis        = get_post_meta($attachmentId, 'visibility', true);
+        $prevVis        = get_post_meta($attachmentId, 'tsjippy_visibility', true);
 
         if ($prevVis != $visibility) {
             do_action('tsjippy_before_visibility_change', $attachmentId, $visibility);
 
             //update post meta
-            update_metadata('post', $attachmentId, 'visibility', $visibility);
+            update_metadata('post', $attachmentId, 'tsjippy_visibility', $visibility);
 
             //Check if moving to public or to private
             if ($visibility == 'public') {
@@ -183,7 +183,7 @@ class AttachmentLibrary
         $default    = SETTINGS['default-status'] ?? 'private';
 
         if ($default == 'private') {
-            update_metadata('post',  $postId, 'visibility', 'private');
+            update_metadata('post',  $postId, 'tsjippy_visibility', 'private');
         }
     }
 }

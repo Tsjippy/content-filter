@@ -7,7 +7,7 @@ use TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 // Make partial page contents filterable
-add_shortcode('content_filter', __NAMESPACE__ . '\renderContentFilterShortcode');
+add_shortcode('tsjippy_content_filter', __NAMESPACE__ . '\renderContentFilterShortcode');
 function renderContentFilterShortcode($atts = array(), $content = null)
 {
     $a = shortcode_atts(array(
