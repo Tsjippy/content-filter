@@ -62,7 +62,7 @@ function isProtected()
 
     //If this page or post does not have the public category and the user is not logged in, redirect them to the login page
     if (
-        http_response_code() != 404            &&        //we try to visit an existing page
+        http_response_code() != 404         &&        //we try to visit an existing page
         !is_user_logged_in()                &&
         !$public                            &&
         !is_search()                        &&
