@@ -136,7 +136,7 @@ class AttachmentLibrary
 
             $query['meta_query'] = [
                 [
-                    'key'     => 'visibility',
+                    'key'     => 'tsjippy_visibility',
                     'value'   => $visibility,
                     'compare' => '==',
                 ]
@@ -145,7 +145,7 @@ class AttachmentLibrary
             if ($visibility == 'public') {
                 $query['meta_query']['relation'] = 'OR';
                 $query['meta_query'][] = [
-                    'key'     => 'visibility',
+                    'key'     => 'tsjippy_visibility',
                     'compare' => 'NOT EXISTS'
                 ];
             }
