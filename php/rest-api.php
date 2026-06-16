@@ -10,7 +10,7 @@ if (! defined('ABSPATH')) exit;
 //Secure the rest api
 add_filter('rest_authentication_errors', __NAMESPACE__ . '\authenticationErrors');
 /**
- * Checks if the user is logged in for rest api calls. If not, an error is returned. Some exceptions can be made by using the tsjippy_allowed_rest_api_urls filter.
+ * Checks if the user is logged in for rest api calls. If not, an error is returned. Some exceptions can be made by using the tsjippy-allowed-rest-api-urls filter.
  *
  * @since 10.1.0
  *
@@ -47,7 +47,7 @@ function isAllowedRestApiUrl()
         TSJIPPY\RESTAPIPREFIX . '/fetch_nonce'
     ];
 
-    $urls    = apply_filters('tsjippy_allowed_rest_api_urls', $urls);
+    $urls    = apply_filters('tsjippy-allowed-rest-api-urls', $urls);
 
     foreach ($urls as $url) {
         if (str_contains($_SERVER['REQUEST_URI'] ?? '', $url)) {
