@@ -61,7 +61,7 @@ class AttachmentLibrary
         $prevVis        = get_post_meta($attachmentId, 'tsjippy_visibility', true);
 
         if ($prevVis != $visibility) {
-            do_action('tsjippy-before-visibility-change', $attachmentId, $visibility);
+            do_action('tsjippy-content-filter-before-visibility-change', $attachmentId, $visibility);
 
             //update post meta
             update_metadata('post', $attachmentId, 'tsjippy_visibility', $visibility);
