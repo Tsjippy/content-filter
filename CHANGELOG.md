@@ -6,6 +6,7 @@
 ### Changed
 - hook and filer name update
 - prefix all hooks with plugin name
+- prefix all hooks with plugin name
 
 ### Fixed
 
