@@ -4,13 +4,18 @@
 ### Added
 
 ### Changed
-- hook and filer name update
-- prefix all hooks with plugin name
-- prefix all hooks with plugin name
 
 ### Fixed
 
 ### Updated
+
+## [10.1.9] - 2026-06-18
+
+
+### Changed
+- hook and filer name update
+- prefix all hooks with plugin name
+- prefix all hooks with plugin name
 
 ## [10.1.8] - 2026-06-15
 
