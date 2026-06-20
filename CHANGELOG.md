@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- use of get_edit_profile_url for profile pagge
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.2.1] - 2026-06-20
+
+
+### Added
+- use of get_edit_profile_url for profile pagge
 
 ## [10.2.0] - 2026-06-19
 
