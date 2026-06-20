@@ -101,29 +101,23 @@ function loopEnd()
         }
     }
 
+    $url = get_edit_profile_url();
+
     // If not a valid e-mail then only allow the account page to reset the email
     if (
         str_contains($user->user_email, ".empty") && 
         !$public && 
         !is_search() && 
         !is_home() && 
-        !str_contains($_SERVER['REQUEST_URI'] ?? '', 'account')
+        !str_contains($_SERVER['REQUEST_URI'] ?? '', $url)
     ) {
         ob_get_clean();
 
-        $url            = '';
-        if (defined('TSJIPPY\USERMANAGEMENT\SETTINGS') && !empty(TSJIPPY\USERMANAGEMENT\SETTINGS['account_page'])) {
-            $url            = get_permalink(TSJIPPY\USERMANAGEMENT\SETTINGS['account_page']);
-            if (!$url) {
-                $url    = '';
-            }
-        }
-
-?>
+        ?>
         <div class='error'>
-            Your e-mail address is not valid please change it <a href='<?php echo esc_url($url); ?>/?section=generic'>here</a>.
+            Your e-mail address is not valid please change it <a href='<?php echo esc_url($url); ?>'>here</a>.
         </div>
-<?php
+        <?php
 
         return;
     }
