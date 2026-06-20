@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- use of get_edit_profile_url for profile pagge
 
 ### Changed
 
