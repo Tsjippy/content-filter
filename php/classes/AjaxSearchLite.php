@@ -48,7 +48,7 @@ class AjaxSearchLite
 
         foreach ($args['post_tax_filter'] as $k => $item) {
             $taxTermQuery = '';
-            $taxonomy       = $item['taxonomy'];
+            $taxonomy       = $item['taxonomy'] ?? '';
 
             // Is there an argument set to allow empty items for this taxonomy filter?
             if (isset($item['allow_empty'])) {
