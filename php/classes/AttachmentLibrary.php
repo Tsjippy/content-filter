@@ -21,16 +21,12 @@ class AttachmentLibrary
 
 ?>
         <div>
-            <input <?php if ($fieldValue == 'public' || empty($fieldValue)) {
-                        echo 'checked';
-                    } ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='public'>
+            <input <?php if ($fieldValue == 'public' || empty($fieldValue)) echo 'checked'; ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='public'>
             Public
         </div>
 
         <div>
-            <input <?php if ($fieldValue == 'private') {
-                        echo 'checked';
-                    } ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='private'>
+            <input <?php if ($fieldValue == 'private') echo 'checked'; ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='private'>
             Private
         </div>
 

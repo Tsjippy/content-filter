@@ -27,7 +27,9 @@ add_action('wp_head', __NAMESPACE__ . '\wpHead');
 function wpHead()
 {
     if (isProtected()) {
-        echo '<meta name="robots" content="noindex, nofollow">';
+        ?>
+        <meta name="robots" content="noindex, nofollow">
+        <?php
     }
 }
 
@@ -127,7 +129,11 @@ function loopEnd()
     if (is_page() && has_category('Confidential') && array_intersect($confidentialGroups, $user->roles)) {
         //prevent the output
         ob_get_clean();
-        echo "<div class='error'>You do not have the permission to see this.</div>";
+        ?>
+        <div class='error'>
+            You do not have the permission to see this.
+        </div>
+        <?php
     }
 }
 
