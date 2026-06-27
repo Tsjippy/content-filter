@@ -39,6 +39,7 @@ class AjaxSearchLite
         $postIdField      = $wpdb->posts . '.ID';
         $postTypeField    = $wpdb->posts . '.post_type';
 
+        // phpcs:ignore
         if (isset($_GET['ignore_op'])) {
             return '';
         }

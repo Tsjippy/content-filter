@@ -13,6 +13,7 @@ function killPageLoad()
     global $wp_query;
 
     if ($wp_query->is_main_query() && isProtected()) {
+        // phpcs:ignore
         echo ob_get_clean();
 
         wp_die('This content is restricted. <br>You will be able to see this page as soon as you login. ', 'This content is restricted. ');

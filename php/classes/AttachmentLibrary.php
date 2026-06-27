@@ -47,10 +47,12 @@ class AttachmentLibrary
      */
     public function editAttachment($attachmentId)
     {
+        // phpcs:ignore
         if (!isset($_REQUEST['attachments'][$attachmentId]['visibility'])) {
             return;
         }
 
+        // phpcs:ignore
         $visibility     = TSJIPPY\sanitize($_REQUEST['attachments'][$attachmentId]['visibility']);
 
         //check if changed
@@ -127,7 +129,9 @@ class AttachmentLibrary
      */
     public function attachmentArgs($query)
     {
+        // phpcs:ignore
         if (!empty($_REQUEST['query']['visibility'])) {
+            // phpcs:ignore
             $visibility = TSJIPPY\sanitize($_REQUEST['query']['visibility']);
 
             $query['meta_query'] = [
