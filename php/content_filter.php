@@ -89,12 +89,12 @@ add_action('get_footer', __NAMESPACE__ . '\loopEnd');
 function loopEnd()
 {
     global    $post;
-    $user                = wp_get_current_user();
-    $taxonomies            = get_post_taxonomies();
+    $user       = wp_get_current_user();
+    $taxonomies = get_post_taxonomies();
 
-    $public                = false;
+    $public     = false;
     if (!empty($taxonomies)) {
-        $taxonomy            = get_post_taxonomies()[0];
+        $taxonomy = get_post_taxonomies()[0];
 
         foreach ((array)get_the_terms($post, $taxonomy) as $term) {
             if (gettype($term) == 'object' && $term->slug    == 'public') {

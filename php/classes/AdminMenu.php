@@ -31,7 +31,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
         ob_start();
 
-?>
+        ?>
         <label>
             <input type="checkbox" name="default-status" value="private" <?php if (isset($this->settings['default-status']) && $this->settings['default-status'] == 'private') echo 'checked'; ?>>
             Make uploaded media private by default
@@ -44,7 +44,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             foreach ($roles as $key => $role) {
             ?>
                 <label>
-                    <input type="checkbox" name="confidential-roles[]" value="<?php echo esc_attr($key); ?>" <?php echo in_array($key, $this->settings['confidential-roles'] ?? []) ? 'checked' : ''; ?>>
+                    <input type="checkbox" name="confidential-roles[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr($key); ?>" <?php if(isset($this->settings['confidential-roles'][$key]) ) echo  'checked'; ?>>
                     <?php echo esc_html($role); ?>
                 </label>
                 <br>
@@ -53,7 +53,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             ?>
         </label>
         <br>
-<?php
+        <?php
 
         TSJIPPY\addRawHtml(ob_get_clean(), $parent);
 
