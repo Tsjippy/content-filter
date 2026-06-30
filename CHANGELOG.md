@@ -5,6 +5,7 @@
 - activate shared code function
 
 ### Changed
+- from post meta to taxonomy
 
 ### Fixed
 
