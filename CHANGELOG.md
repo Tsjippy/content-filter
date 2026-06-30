@@ -2,15 +2,22 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.1] - 2026-06-30
+
+
+### Added
 - attribute escaping
 
 ### Changed
 - plugin tested up to 7.0
 - replaced in_array with isset
-
-### Fixed
-
-### Updated
 
 ## [10.3.0] - 2026-06-26
 
