@@ -19,7 +19,7 @@ class AttachmentLibrary
 
         ob_start();
 
-?>
+        ?>
         <div>
             <input <?php if ($fieldValue == 'public' || empty($fieldValue)) echo 'checked'; ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='public'>
             Public
@@ -30,7 +30,7 @@ class AttachmentLibrary
             Private
         </div>
 
-<?php
+        <?php
 
         $formFields['visibility'] = array(
             'value' => $fieldValue ? $fieldValue : '',

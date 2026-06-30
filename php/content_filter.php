@@ -112,6 +112,7 @@ function loopEnd()
         !$public && 
         !is_search() && 
         !is_home() && 
+        // phpcs:ignore
         !str_contains($_SERVER['REQUEST_URI'] ?? '', $url)
     ) {
         ob_get_clean();

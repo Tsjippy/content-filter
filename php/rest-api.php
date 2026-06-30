@@ -50,6 +50,7 @@ function isAllowedRestApiUrl()
     $urls    = apply_filters('tsjippy-allowed-rest-api-urls', $urls);
 
     foreach ($urls as $url) {
+        // phpcs:ignore
         if (str_contains($_SERVER['REQUEST_URI'] ?? '', $url)) {
             return true;
         }
