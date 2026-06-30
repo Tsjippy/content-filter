@@ -15,7 +15,10 @@ class AttachmentLibrary
      */
     public function fieldsToEdit($formFields, $post)
     {
-        $fieldValue = get_post_meta($post->ID, 'tsjippy_visibility', true);
+        $postTerms = wp_get_post_terms($post->ID, 'visibility');
+        if(isset($postTerms[0]->slug)){
+            $fieldValue = $postTerms[0]->slug;
+        }
 
         ob_start();
 
@@ -56,13 +59,17 @@ class AttachmentLibrary
         $visibility     = TSJIPPY\sanitize($_REQUEST['attachments'][$attachmentId]['visibility']);
 
         //check if changed
-        $prevVis        = get_post_meta($attachmentId, 'tsjippy_visibility', true);
+        $prevVis    = '';
+        $terms = wp_get_post_terms($attachmentId, 'visibility');
+        if(isset($terms[0]->slug)){
+            $prevVis    = $terms[0]->slug;
+        }
 
         if ($prevVis != $visibility) {
             do_action('tsjippy-content-filter-before-visibility-change', $attachmentId, $visibility);
 
             //update post meta
-            update_metadata('post', $attachmentId, 'tsjippy_visibility', $visibility);
+            wp_set_post_terms($attachmentId, $visibility, 'visibility');
 
             //Check if moving to public or to private
             if ($visibility == 'public') {
@@ -130,23 +137,24 @@ class AttachmentLibrary
     public function attachmentArgs($query)
     {
         // phpcs:ignore
-        if (!empty($_REQUEST['query']['visibility'])) {
-            // phpcs:ignore
-            $visibility = TSJIPPY\sanitize($_REQUEST['query']['visibility']);
-
-            $query['meta_query'] = [
+        if (!empty($query['visibility'])) {
+            // Add a term query for the requested visibilty
+            $query['tax_query'] = [
                 [
-                    'key'     => 'tsjippy_visibility',
-                    'value'   => $visibility,
-                    'compare' => '==',
+                    'taxonomy' => 'visibility',
+                    'field'    => 'slug',
+                    'terms'    => array($query['visibility'])
                 ]
             ];
 
-            if ($visibility == 'public') {
-                $query['meta_query']['relation'] = 'OR';
-                $query['meta_query'][] = [
-                    'key'     => 'tsjippy_visibility',
-                    'compare' => 'NOT EXISTS'
+            // if we want to see public we should also query for posts without the term
+            if($query['visibility'] == 'publlic'){
+                $query['tax_query'][0]['relation'] = 'OR';
+                $query['tax_query'][0][] = [
+                    'taxonomy' => 'visibility',
+                    'field'    => 'slug',
+                    'terms'    => array($query['visibility']),
+                    'operator' => 'NOT EXISTS',
                 ];
             }
         }
@@ -183,7 +191,7 @@ class AttachmentLibrary
         $default    = SETTINGS['default-status'] ?? 'private';
 
         if ($default == 'private') {
-            update_metadata('post',  $postId, 'tsjippy_visibility', 'private');
+            wp_set_post_terms($postId, 'private', 'visibility');
         }
     }
 }
