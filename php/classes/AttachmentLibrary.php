@@ -11,11 +11,17 @@ if (! defined('ABSPATH')) {
 class AttachmentLibrary
 {
     /**
-     * add public/private radio buttons to attachment page
+     * Adds public/private radio buttons to attachment page
+     * 
+     * @param array $formFields The form fields for an attachment
+     * @param \WP_Post $post The attachment post object
+     * 
+     * @return array The updated form fields with the visibility radio buttons added
      */
     public function fieldsToEdit($formFields, $post)
     {
-        $postTerms = wp_get_post_terms($post->ID, 'visibility');
+        $fieldValue = '';
+        $postTerms  = wp_get_post_terms($post->ID, 'visibility');
         if(isset($postTerms[0]->slug)){
             $fieldValue = $postTerms[0]->slug;
         }
@@ -46,7 +52,11 @@ class AttachmentLibrary
     }
 
     /**
-     * change visibility of an attachment
+     * Change visibility of an attachment
+     * 
+     * @param int $attachmentId The ID of the attachment to set the visibility for
+     * 
+     * @return void
      */
     public function editAttachment($attachmentId)
     {
@@ -133,10 +143,13 @@ class AttachmentLibrary
 
     /**
      * Filter library if needed
+     * 
+     * @param array $query The query args
+     * 
+     * @return array The updated query args
      */
     public function attachmentArgs($query)
     {
-        // phpcs:ignore
         if (!empty($query['visibility'])) {
             // Add a term query for the requested visibilty
             $query['tax_query'] = [
@@ -148,9 +161,9 @@ class AttachmentLibrary
             ];
 
             // if we want to see public we should also query for posts without the term
-            if($query['visibility'] == 'publlic'){
-                $query['tax_query'][0]['relation'] = 'OR';
-                $query['tax_query'][0][] = [
+            if($query['visibility'] == 'public'){
+                $query['tax_query']['relation'] = 'OR';
+                $query['tax_query'][] = [
                     'taxonomy' => 'visibility',
                     'field'    => 'slug',
                     'terms'    => array($query['visibility']),
@@ -163,7 +176,11 @@ class AttachmentLibrary
     }
 
     /**
-     * Move the file to the private dird
+     * Move the file to the private dir
+     * 
+     * @param array $file The file array
+     * 
+     * @return array The file array
      */
     function handleUpload($file)
     {
@@ -184,7 +201,11 @@ class AttachmentLibrary
     }
 
     /**
-     * Set the visibility key
+     * Set the visibility key for a new attachment
+     * 
+     * @param int $postId The ID of the new attachment post
+     * 
+     * @return void
      */
     public function addAttachment($postId)
     {
