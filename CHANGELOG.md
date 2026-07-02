@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- activate shared code function
 
 ### Changed
-- from post meta to taxonomy
 
 ### Fixed
 
 ### Updated
+
+## [10.3.2] - 2026-07-02
+
+
+### Added
+- activate shared code function
+
+### Changed
+- from post meta to taxonomy
 
 ## [10.3.1] - 2026-06-30
 
