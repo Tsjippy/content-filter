@@ -13,6 +13,10 @@ class AjaxSearchLite
 
     /**
      * Only search in posts with the public category
+     * 
+     * @param string $querystr The query string for the search
+     * @param array $args The arguments for the search
+     * 
      */
     public function limitSearchToPublic($querystr, $args, $id, $_ajax_search)
     {

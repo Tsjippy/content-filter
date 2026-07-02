@@ -10,6 +10,15 @@ if (! defined('ABSPATH')) exit;
  * AJAX Search Lite filters
  */
 add_filter('asl_query_cpt', __NAMESPACE__ . '\limitSearchToPublic', 10, 4);
+/**
+ * Filter the search results to only show public items for non-loggedin users
+ *
+ * @param    string        $querystr        The current query string
+ * @param    array        $args            The current query args
+ * @param    string        $id                The search ID
+ * @param    boolean        $_ajax_search    Whether this is an AJAX search or not
+ * @return    string        The modified query string
+ */
 function limitSearchToPublic($querystr, $args, $id, $_ajax_search)
 {
     $ajaxSearch = new AjaxSearchLite();
@@ -22,6 +31,13 @@ function limitSearchToPublic($querystr, $args, $id, $_ajax_search)
  * Attachment Library Filters
  */
 add_filter('attachment_fields_to_edit', __NAMESPACE__ . '\fieldsToEdit', 10, 2);
+/**
+ * Filter the attachment fields to only show public items for non-loggedin users
+ *
+ * @param    array        $formFields    The current form fields
+ * @param    WP_Post        $post        The current post object
+ * @return    array        The modified form fields
+ */
 function fieldsToEdit($formFields, $post)
 {
     $attachmentLibrary  = new AttachmentLibrary();
@@ -30,6 +46,12 @@ function fieldsToEdit($formFields, $post)
 }
 
 add_action('edit_attachment', __NAMESPACE__ . '\editAttachment');
+/**
+ * Filter the attachment edit to only show public items for non-loggedin users
+ *
+ * @param    int        $attachmentId    The current attachment ID
+ * @return    array        The modified form fields
+ */
 function editAttachment($attachmentId)
 {
     $attachmentLibrary  = new AttachmentLibrary();
@@ -38,6 +60,12 @@ function editAttachment($attachmentId)
 }
 
 add_filter('ajax_query_attachments_args',  __NAMESPACE__ . '\attachmentArgs');
+/**
+ * Filter the attachment query args to only show public items for non-loggedin users
+ *
+ * @param    array        $query        The current query args
+ * @return    array        The modified query args
+ */
 function attachmentArgs($query)
 {
     $attachmentLibrary  = new AttachmentLibrary();
@@ -47,6 +75,12 @@ function attachmentArgs($query)
 
 
 add_filter('wp_handle_upload', __NAMESPACE__ . '\handleUpload');
+/**
+ * Filter the upload to only show public items for non-loggedin users
+ *
+ * @param    array        $file        The current file array
+ * @return    array        The modified file array
+ */
 function handleUpload($file)
 {
     $attachmentLibrary  = new AttachmentLibrary();
@@ -55,6 +89,12 @@ function handleUpload($file)
 }
 
 add_action('add_attachment', __NAMESPACE__ . '\addAttachment');
+/**
+ * Filter the attachment add to only show public items for non-loggedin users
+ *
+ * @param    int        $postId        The current post ID
+ * @return    array        The modified form fields
+ */
 function addAttachment($postId)
 {
     $attachmentLibrary  = new AttachmentLibrary();

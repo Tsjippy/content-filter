@@ -8,6 +8,9 @@ if (! defined('ABSPATH')) exit;
 
 // Kill the page load if the page is protected
 add_action('wp_body_open', __NAMESPACE__ . '\killPageLoad');
+/**
+ * Kills the page load if the page is protected
+ */
 function killPageLoad()
 {
     global $wp_query;
@@ -25,6 +28,9 @@ function killPageLoad()
 
 // Add meta tag so this page is not indexed by search machines
 add_action('wp_head', __NAMESPACE__ . '\wpHead');
+/**
+ * Add meta tag to prevent search engines from indexing this page
+ */
 function wpHead()
 {
     if (isProtected()) {
@@ -36,6 +42,13 @@ function wpHead()
 
 // Discourage robots
 add_filter('robots_txt', __NAMESPACE__ . '\robotsText', 10, 2);
+/**
+ * Discourage robots from indexing the wp-content folder
+ *
+ * @param    string        $output        The current robots.txt output
+ * @param    boolean        $public        Whether the site is considered "public" or not
+ * @return    string        The modified robots.txt output
+ */
 function robotsText($output, $public)
 {
     $output    .= "User-agent: *\n";
@@ -79,6 +92,12 @@ function isProtected()
 
 // Add a login button if the user is not logged in and the current page is only for logged in users
 add_filter('tsjippy-login-add-login-button', __NAMESPACE__ . '\loginButton');
+/**
+ * Add a login button if the user is not logged in and the current page is only for logged in users
+ *
+ * @param    boolean        $show        Whether to show the login button or not
+ * @return    boolean        Whether to show the login button or not
+ */
 function loginButton($show)
 {
 
@@ -86,6 +105,9 @@ function loginButton($show)
 }
 
 add_action('get_footer', __NAMESPACE__ . '\loopEnd');
+/**
+ * Check if the user is allowed to see this page and if not, show a message
+ */
 function loopEnd()
 {
     global    $post;
@@ -141,6 +163,9 @@ function loopEnd()
 
 //Make sure is_user_logged_in function is available by only running this when init
 add_action('init', __NAMESPACE__ . '\init');
+/**
+ * Initialize the content filter
+ */
 function init()
 {
     // do not run during rest request
@@ -152,6 +177,11 @@ function init()
     add_action('pre_get_posts', __NAMESPACE__ . '\preNewsPosts');
 }
 
+/**
+ * Filter the news posts query to only show items the user is allowed to see
+ *
+ * @param    \WP_Query        $query        The current query object
+ */
 function preNewsPosts($query)
 {
     if ($query->is_home() && $query->is_main_query()) {
@@ -174,6 +204,11 @@ function preNewsPosts($query)
 
 //Only show public search results for non-loggedin users
 add_filter('pre_get_posts', __NAMESPACE__ . '\prePosts');
+/**
+ * Filter the search posts query to only show public items for non-loggedin users
+ *
+ * @param    \WP_Query        $query        The current query object
+ */
 function prePosts($query)
 {
     if ($query->is_search &&  !is_user_logged_in()) {

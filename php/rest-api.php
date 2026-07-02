@@ -40,6 +40,11 @@ function authenticationErrors($result)
     }
 }
 
+/**
+ * Check if the current rest api request is allowed without authentication
+ *
+ * @return bool        True if the request is allowed, false otherwise
+ */
 function isAllowedRestApiUrl()
 {
     $urls    = [

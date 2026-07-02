@@ -7,6 +7,13 @@ use TSJIPPY;
 if (! defined('ABSPATH')) exit;
 
 add_filter('tsjippy-page-gallery-frontpage-posts', __NAMESPACE__ . '\postGalleryPosts', 10, 2);
+/**
+ * Filter the posts for the frontpage gallery to only show public items for non-loggedin users
+ *
+ * @param    array        $args        The current query args
+ * @param    array        $postTypes    The post types to filter
+ * @return    array        The modified query args
+ */
 function postGalleryPosts($args, $postTypes)
 {
     if (is_user_logged_in()) {

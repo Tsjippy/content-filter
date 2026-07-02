@@ -8,6 +8,13 @@ if (! defined('ABSPATH')) exit;
 
 // Make partial page contents filterable
 add_shortcode('tsjippy_content_filter', __NAMESPACE__ . '\renderContentFilterShortcode');
+/**
+ * Render the content filter shortcode
+ *
+ * @param    array        $atts        The shortcode attributes
+ * @param    string        $content    The shortcode content
+ * @return    string        The modified content
+ */
 function renderContentFilterShortcode($atts = array(), $content = null)
 {
     $a = shortcode_atts(array(
