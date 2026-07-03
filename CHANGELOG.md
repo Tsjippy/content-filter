@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- plugin settings key
 
 ### Updated
+
+## [10.3.4] - 2026-07-03
+
+
+### Fixed
+- plugin settings key
 
 ## [10.3.3] - 2026-07-02
 
