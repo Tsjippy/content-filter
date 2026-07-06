@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- block visibility settings
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.3.5] - 2026-07-06
+
+
+### Added
+- block visibility settings
 
 ## [10.3.4] - 2026-07-03
 
