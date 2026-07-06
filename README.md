@@ -1,15 +1,11 @@
-Enables comment notifications
+Great plugin to define which content to show depending on device type, user role or logged in status
 
 == Description ==
-This plugin filters all content to be only available to logged-in users.<br>
-Only content with the public category is visible to non-logged-in users.<br>
+This plugin filters all content to be only available to logged-in users, except for content with the public category.
 It also makes it possible to move files to a private folder so that it is not directly accessible.<br>
 <br>
-It adds one shortcode: 'content_filter' which makes it possible to limit certain parts of a page or post to certain groups.<br>
-This shortcode has two properties: roles and inversed.<br>
-Roles define the roles who can see the content.<br>
-If inversed is set to true, roles define the roles who cannot see the content.<br>
-Use like this: <code>[content_filter roles='administrator, otherroles']This has limited visibility[/content_filter]</code>
+Enabling this plugin will also add block visibilty options to all blocks<br>
+Visibility of each block can be determined by user role, type of page(i.e. archive, home_page etc), mobile, or login status
 
 == Hooks ==
 # FILTERS

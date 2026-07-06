@@ -7,6 +7,44 @@ use WP_Error;
 
 if (! defined('ABSPATH')) exit;
 
+add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
+function restApiInit()
+{
+    // Get all roles 
+    register_rest_route(
+        TSJIPPY\RESTAPIPREFIX . '/content_filter',
+        '/get_roles',
+        array(
+            'methods'     => 'POST',
+            'callback'     => function ($wpRestRequest) {
+                require_once ABSPATH . 'wp-admin/includes/user.php';
+                
+                $array  = [];
+                foreach( get_editable_roles() as $key => $data){
+                    $array[] = [
+                        'value' => $key,
+                        'label' => $data['name']
+                    ];
+                }
+
+                return $array;
+            },
+            'permission_callback' => '__return_true'
+        )
+    );
+
+    // Get allowed filters
+    register_rest_route(
+        TSJIPPY\RESTAPIPREFIX . '/content_filter',
+        '/get_allowed_php_filters',
+        array(
+            'methods'     => 'POST',
+            'callback'     => __NAMESPACE__.'\getAllowedPhpBlockFilters',
+            'permission_callback' => '__return_true'
+        )
+    );
+}
+
 //Secure the rest api
 add_filter('rest_authentication_errors', __NAMESPACE__ . '\authenticationErrors');
 /**
@@ -62,4 +100,13 @@ function isAllowedRestApiUrl()
     }
 
     return false;
+}
+
+function getAllowedPhpBlockFilters(){
+    /**
+     * Filters the functions that are allowed to run to determine block visiibility
+     * 
+     * @param   $functionNames  Array containing the full qualified function names as indexes
+     */
+    return apply_filters('tsjippy-allowed-block-filter-functions', ['is_tax', 'is_archive', 'is_category', 'is_home', 'has_post_thumbnail', 'is_front_page']);
 }
