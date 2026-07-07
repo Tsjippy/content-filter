@@ -34,6 +34,8 @@ add_filter('render_block', __NAMESPACE__ . '\filterBlock', 10, 2);
  */
 function filterBlock($blockContent, $block)
 {
+    $filtered   = false;
+
     /** 
      * hideOnMobile
      */
@@ -48,28 +50,28 @@ function filterBlock($blockContent, $block)
         // not on a specific page
         (!empty($block['attrs']['onlyOn']) && !in_array(get_the_ID(), $block['attrs']['onlyOn'] ))    ||
         // or not logged in
-        (isset($block['attrs']['onlyLoggedIn']) && !is_user_logged_in())    ||
+        (($block['attrs']['onlyLoggedIn'] ?? false) && !is_user_logged_in())    ||
         // or logged in
-        (isset($block['attrs']['onlyNotLoggedIn']) && is_user_logged_in())
+        (($block['attrs']['onlyNotLoggedIn'] ?? false) && is_user_logged_in())
     ) {
-        return '';
+        $filtered   = true;
     }
 
-    /** 
+     /** 
      * Hide when we do not have the correct role
      */
-    if(!empty($block['attrs']['roles'])){
+    elseif(!empty($block['attrs']['roles'])){
         $overlappingRoles = array_intersect(wp_get_current_user()->roles, $block['attrs']['roles']);
         if(
             !$overlappingRoles ||                           // We do not have one of the selected role
             ($block['attrs']['rolesInverseLogic'] ?? false) // Or we do have but it is inversed
         ){
-            return '';
+            $filtered   = true;
         }
     }
 
-    // Run php filters
-    if (!empty($block['attrs']['phpFilters'])) {
+     // Run php filters
+    elseif (!empty($block['attrs']['phpFilters'])) {
         $show    = false;
 
         $allowedFilters = getAllowedPhpBlockFilters();
@@ -96,10 +98,17 @@ function filterBlock($blockContent, $block)
         }
 
         if (!$show) {
-            return '';
+            $filtered   = true;
         }
     }
 
+    if($filtered){
+        if(($_REQUEST['context'] ?? '') == "edit"){
+            return "<div class='warning'>This block is invisible outside the block editor due to filter conditions.</div>";
+        }
+
+        return '';
+    }
 
     return $blockContent;
 }

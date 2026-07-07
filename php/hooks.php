@@ -116,3 +116,59 @@ add_filter('tsjippy-theme-news-query', function ($args, $user) {
 
     return $args;
 }, 10, 2);
+
+add_filter( 'register_block_type_args', __NAMESPACE__.'\addGlobalAttributes' );
+/**
+ * Add filter attributes to all blocks
+ *
+ * @param array $args Arguments for registering a block type.
+ * 
+ * @return array
+ */
+function addGlobalAttributes( $args ) {
+    if ( ! isset( $args['attributes'] ) || ! is_array( $args['attributes'] ) ) {
+		$args['attributes'] = array();
+	}
+    
+    $args['attributes']['hideOnMobile'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+    $args['attributes']['onlyLoggedIn'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+    $args['attributes']['onlyNotLoggedIn'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+    $args['attributes']['onlyOn'] = array(
+        'type'    => 'array',
+        'default' => [],
+    );
+
+    $args['attributes']['phpFilters'] = array(
+        'type'    => 'array',
+        'default' => [],
+    );
+
+    $args['attributes']['phpFilterInverseLogic'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+    $args['attributes']['roles'] = array(
+        'type'    => 'array',
+        'default' => [],
+    );
+
+    $args['attributes']['rolesInverseLogic'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+	return $args;
+}
