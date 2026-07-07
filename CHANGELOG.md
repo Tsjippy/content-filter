@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- add filter attributes also server side
 
 ### Updated
 
