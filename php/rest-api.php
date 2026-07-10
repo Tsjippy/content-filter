@@ -29,7 +29,9 @@ function restApiInit()
 
                 return $array;
             },
-            'permission_callback' => '__return_true'
+            'permission_callback' => function(){
+                return current_user_can('edit_users');
+            }
         )
     );
 
@@ -40,7 +42,9 @@ function restApiInit()
         array(
             'methods'     => 'POST',
             'callback'     => __NAMESPACE__.'\getAllowedPhpBlockFilters',
-            'permission_callback' => '__return_true'
+            'permission_callback' => function(){
+                return current_user_can('edit_posts');
+            }
         )
     );
 }

@@ -15,29 +15,27 @@ document.addEventListener("DOMContentLoaded", function () {
     var VisibilityFilter = wp.media.view.AttachmentFilters.extend({
         id: 'visibility-filter',
         createFilters: function () {
-            var filters = {};
-
-            // Add the option to select ALL
-            filters.all = {
-                text: 'Show all',
-                priority: 10
+            this.filters = {
+                all: {
+                    text:     'Show all',
+                    priority: 10,
+                    props:    {
+                        tsjippy_visibility : ''
+                    },
+                },
+                public: {
+                    text: 'Show public',
+                    props:    {
+                        tsjippy_visibility : 'public'
+                    },
+                },
+                private: {
+                    text: 'Show private',
+                    props:    {
+                        tsjippy_visibility : 'private'
+                    },
+                }
             };
-            filters['all']['props'] = {};
-            filters['all']['props']['visibility'] = '';
-
-            filters['public'] = {
-                text: 'Show public',
-            };
-            filters['public']['props'] = {};
-            filters['public']['props']['visibility'] = 'public';
-
-            filters['private'] = {
-                text: 'Show private',
-            };
-            filters['private']['props'] = {};
-            filters['private']['props']['visibility'] = 'private';
-
-            this.filters = filters;
         }
     });
 

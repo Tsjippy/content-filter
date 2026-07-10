@@ -21,7 +21,7 @@ class AttachmentLibrary
     public function fieldsToEdit($formFields, $post)
     {
         $fieldValue = '';
-        $postTerms  = wp_get_post_terms($post->ID, 'visibility');
+        $postTerms  = wp_get_post_terms($post->ID, 'tsjippy_visibility');
         if(isset($postTerms[0]->slug)){
             $fieldValue = $postTerms[0]->slug;
         }
@@ -30,12 +30,12 @@ class AttachmentLibrary
 
         ?>
         <div>
-            <input <?php if ($fieldValue == 'public' || empty($fieldValue)) echo 'checked'; ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='public'>
+            <input type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]'  value='public' <?php if ($fieldValue == 'public' || empty($fieldValue)) echo 'checked'; ?> style='width: initial'>
             Public
         </div>
 
         <div>
-            <input <?php if ($fieldValue == 'private') echo 'checked'; ?> style='width: initial' type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='private'>
+            <input  type='radio' name='attachments[<?php echo esc_attr($post->ID); ?>][visibility]' value='private' <?php if ($fieldValue == 'private') echo 'checked'; ?> style='width: initial' >
             Private
         </div>
 
@@ -70,7 +70,7 @@ class AttachmentLibrary
 
         //check if changed
         $prevVis    = '';
-        $terms = wp_get_post_terms($attachmentId, 'visibility');
+        $terms = wp_get_post_terms($attachmentId, 'tsjippy_visibility');
         if(isset($terms[0]->slug)){
             $prevVis    = $terms[0]->slug;
         }
@@ -79,7 +79,7 @@ class AttachmentLibrary
             do_action('tsjippy-content-filter-before-visibility-change', $attachmentId, $visibility);
 
             //update post meta
-            wp_set_post_terms($attachmentId, $visibility, 'visibility');
+            wp_set_post_terms($attachmentId, $visibility, 'tsjippy_visibility');
 
             //Check if moving to public or to private
             if ($visibility == 'public') {
@@ -150,23 +150,23 @@ class AttachmentLibrary
      */
     public function attachmentArgs($query)
     {
-        if (!empty($query['visibility'])) {
+        if (!empty($query['tsjippy_visibility'])) {
             // Add a term query for the requested visibilty
             $query['tax_query'] = [
                 [
-                    'taxonomy' => 'visibility',
+                    'taxonomy' => 'tsjippy_visibility',
                     'field'    => 'slug',
-                    'terms'    => array($query['visibility'])
+                    'terms'    => array($query['tsjippy_visibility'])
                 ]
             ];
 
             // if we want to see public we should also query for posts without the term
-            if($query['visibility'] == 'public'){
+            if($query['tsjippy_visibility'] == 'public'){
                 $query['tax_query']['relation'] = 'OR';
                 $query['tax_query'][] = [
-                    'taxonomy' => 'visibility',
+                    'taxonomy' => 'tsjippy_visibility',
                     'field'    => 'slug',
-                    'terms'    => array($query['visibility']),
+                    'terms'    => array($query['tsjippy_visibility']),
                     'operator' => 'NOT EXISTS',
                 ];
             }
@@ -212,7 +212,7 @@ class AttachmentLibrary
         $default    = SETTINGS['default-status'] ?? 'private';
 
         if ($default == 'private') {
-            wp_set_post_terms($postId, 'private', 'visibility');
+            wp_set_post_terms($postId, 'private', 'tsjippy_visibility');
         }
     }
 }

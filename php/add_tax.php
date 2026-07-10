@@ -9,5 +9,5 @@ if (! defined('ABSPATH')) exit;
 add_action('init', function(){
 
     //register visibility taxonomy
-    register_taxonomy('visibility', 'attachment', ['show_ui' => false]);
+    register_taxonomy('tsjippy_visibility', 'attachment', ['show_ui' => false]);
 });
