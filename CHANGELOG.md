@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- add filter attributes also server side
 
 ### Updated
+
+## [10.3.7] - 2026-07-10
+
+
+### Fixed
+- add filter attributes also server side
 
 ## [10.3.6] - 2026-07-06
 

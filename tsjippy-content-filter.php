@@ -5,7 +5,7 @@ namespace TSJIPPY\CONTENTFILTER;
 /**
  * Plugin Name:          Tsjippy Content Filter
  * Description:          This plugin filters all content, excluding content with the public category, to be only available to logged-in users.
- * Version:              10.3.6
+ * Version:              10.3.7
  * Author:               Ewald Harmsen
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
