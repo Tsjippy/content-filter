@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- prefix taxonomy
 
 ### Fixed
 
 ### Updated
+
+## [10.3.8] - 2026-07-10
+
+
+### Changed
+- prefix taxonomy
 
 ## [10.3.7] - 2026-07-10
 
