@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- apply parent block filter to child blocks
 
 ### Fixed
 
 ### Updated
+
+## [10.3.9] - 2026-07-10
+
+
+### Changed
+- apply parent block filter to child blocks
 
 ## [10.3.8] - 2026-07-10
 
