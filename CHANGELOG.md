@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- apply parent block filter to child blocks
 
 ### Fixed
 
