@@ -135,7 +135,17 @@ function addGlobalAttributes( $args ) {
         'default' => false,
     );
 
+    $args['attributes']['hideOnMobileInherited'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
     $args['attributes']['onlyLoggedIn'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
+    $args['attributes']['onlyLoggedInInherited'] = array(
         'type'    => 'boolean',
         'default' => false,
     );
@@ -145,7 +155,17 @@ function addGlobalAttributes( $args ) {
         'default' => false,
     );
 
+    $args['attributes']['onlyNotLoggedInInherited'] = array(
+        'type'    => 'boolean',
+        'default' => false,
+    );
+
     $args['attributes']['onlyOn'] = array(
+        'type'    => 'array',
+        'default' => [],
+    );
+
+    $args['attributes']['onlyOnInherited'] = array(
         'type'    => 'array',
         'default' => [],
     );
@@ -153,6 +173,11 @@ function addGlobalAttributes( $args ) {
     $args['attributes']['phpFilters'] = array(
         'type'    => 'array',
         'default' => [],
+    );
+
+    $args['attributes']['phpFiltersInherited'] = array(
+        'type'    => 'boolean',
+        'default' => false,
     );
 
     $args['attributes']['phpFilterInverseLogic'] = array(
@@ -163,6 +188,11 @@ function addGlobalAttributes( $args ) {
     $args['attributes']['roles'] = array(
         'type'    => 'array',
         'default' => [],
+    );
+
+    $args['attributes']['rolesInherited'] = array(
+        'type'    => 'boolean',
+        'default' => false,
     );
 
     $args['attributes']['rolesInverseLogic'] = array(

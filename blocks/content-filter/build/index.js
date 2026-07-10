@@ -1,1 +1,657 @@
-(()=>{"use strict";var e={n:t=>{var o=t&&t.__esModule?()=>t.default:()=>t;return e.d(o,{a:o}),o},d:(t,o)=>{for(var s in o)e.o(o,s)&&!e.o(t,s)&&Object.defineProperty(t,s,{enumerable:!0,get:o[s]})},o:(e,t)=>Object.prototype.hasOwnProperty.call(e,t)};const t=window.wp.i18n,o=window.wp.components,s=window.wp.element,n=window.wp.data,l=window.wp.coreData,i=window.wp.htmlEntities,r=window.wp.apiFetch;var d=e.n(r);window.wp.url;const a=window.ReactJSXRuntime,{createHigherOrderComponent:p}=wp.compose,{Fragment:c}=wp.element,{InspectorControls:h}=wp.blockEditor,{PanelBody:g,ToggleControl:y,CheckboxControl:u}=wp.components;console.log("block filter loaded"),wp.hooks.addFilter("blocks.registerBlockType","tsjippy/content-filter-attribute",function(e){return void 0!==e.attributes&&(e.attributes=Object.assign(e.attributes,{hideOnMobile:{type:"boolean",default:!1},onlyLoggedIn:{type:"boolean",default:!1},onlyNotLoggedIn:{type:"boolean",default:!1},onlyOn:{type:"array",default:[]},phpFilters:{type:"array",default:[]},phpFilterInverseLogic:{type:"boolean",default:!1},roles:{type:"array",default:[]},rolesInverseLogic:{type:"boolean",default:!1}})),e});var j=[];document.addEventListener("DOMContentLoaded",()=>{d()({path:tsjippy.restApiPrefix+"/content_filter/get_roles",method:"POST"}).then(e=>{j=e})});var b=[];document.addEventListener("DOMContentLoaded",()=>{d()({path:tsjippy.restApiPrefix+"/content_filter/get_allowed_php_filters",method:"POST"}).then(e=>{b=e})});const f=p(e=>r=>{const{attributes:d,setAttributes:p,isSelected:f}=r;if(!f)return(0,a.jsx)(c,{children:(0,a.jsx)(e,{...r})});const[w,x]=(0,s.useState)(""),{initialSelectedPages:_,selectedPagesResolved:v}=(0,n.useSelect)(e=>{const t=["postType","page",{include:d.onlyOn}];return{initialSelectedPages:e(l.store).getEntityRecords(...t),selectedPagesResolved:e(l.store).hasFinishedResolution("getEntityRecords",t)}},[]),{pages:m,pagesResolved:O}=(0,n.useSelect)(e=>{if(!w)return{pages:[],pagesResolved:!0};const t=["postType","page",{exclude:d.onlyOn,search:w,per_page:100,orderby:"relevance"}];return{pages:e(l.store).getEntityRecords(...t),pagesResolved:e(l.store).hasFinishedResolution("getEntityRecords",t)}},[w]),L=function(e){let t=d.onlyOn;e?(p({onlyOn:[...t,this]}),C([...k,m.find(e=>e.id==this)])):(t=t.filter(e=>e!=this),0==t.length&&(t=void 0),p({onlyOn:t}))},R=function({hasResolved:e,items:s,showNoResults:n=!0}){return e?s?.length?s?.map(e=>{let t=d.onlyOn;return(0,a.jsx)(u,{label:(0,i.decodeEntities)(e.title.rendered),onChange:L.bind(e.id),checked:t.includes(e.id)})}):n&&w?(0,a.jsxs)("div",{children:[" ",(0,t.__)("No search results","tsjippy")]}):"":(0,a.jsxs)(a.Fragment,{children:[(0,a.jsx)(o.Spinner,{}),(0,a.jsx)("br",{})]})},[k,C]=(0,s.useState)([]),[I,F]=(0,s.useState)(d.onlyOn.length>0?(0,a.jsxs)(a.Fragment,{children:[(0,a.jsxs)("i",{children:[" ",(0,t.__)("Currently selected pages","tsjippy"),":"]}),(0,a.jsx)("br",{}),(0,a.jsx)(R,{hasResolved:v,items:_,showNoResults:!1})]}):"");(0,s.useEffect)(()=>{C(_)},[v]),(0,s.useEffect)(()=>{C(k.filter(e=>d.onlyOn.includes(e.id)))},[d.onlyOn]),(0,s.useEffect)(()=>{F(R({hasResolved:v,items:k,showNoResults:!1}))},[k]);return(0,a.jsxs)(c,{children:[(0,a.jsx)(e,{...r}),(0,a.jsx)(h,{children:(0,a.jsxs)(g,{title:(0,t.__)("Block Visibility","tsjippy"),initialOpen:!1,children:[(0,a.jsx)(y,{label:(0,t.__)("Hide on mobile","tsjippy"),checked:!!d.hideOnMobile,onChange:()=>p({hideOnMobile:!d.hideOnMobile})}),(0,a.jsx)(y,{label:(0,t.__)("Hide if not logged in","tsjippy"),checked:!!d.onlyLoggedIn,onChange:()=>p({onlyLoggedIn:!d.onlyLoggedIn})}),(0,a.jsx)(y,{label:(0,t.__)("Hide if logged in","tsjippy"),checked:!!d.onlyNotLoggedIn,onChange:()=>p({onlyNotLoggedIn:!d.onlyNotLoggedIn})}),(0,a.jsx)("b",{children:(0,t.__)("PHP Functions To Apply","tsjippy")}),(0,a.jsx)("br",{}),(0,t.__)("Select to hide","tsjippy"),(0,a.jsx)(y,{label:(0,t.__)("Inverse Logic","tsjippy"),checked:!!d.phpFilterInverseLogic,onChange:()=>p({phpFilterInverseLogic:!d.phpFilterInverseLogic})}),[b.map(e=>(0,a.jsx)(u,{label:e,onChange:t=>function(e,t){let o=d.phpFilters;e?o.push(t):o=o.filter(e=>e!=t),p({phpFilters:[...o]})}(t,e),checked:d.phpFilters.indexOf(e)>-1},e))],(0,a.jsx)("strong",{children:(0,t.__)("Select pages","tsjippy")}),(0,a.jsx)("br",{}),(0,t.__)("Select pages you want this widget to show on","tsjippy"),".",(0,a.jsx)("br",{}),(0,t.__)("Leave empty for all pages","tsjippy"),(0,a.jsx)("br",{}),(0,a.jsx)("br",{}),I,(0,a.jsx)("i",{children:(0,t.__)("Use searchbox below to search for more pages to include","tsjippy")}),(0,a.jsx)(o.SearchControl,{onChange:x,value:w}),(0,a.jsx)(R,{hasResolved:O,items:m}),(0,a.jsx)("b",{children:(0,t.__)("Roles Who Can See This Block","tsjippy")}),(0,a.jsx)("br",{}),(0,a.jsx)(y,{label:(0,t.__)("Inverse Logic","tsjippy"),checked:!!d.rolesInverseLogic,onChange:()=>p({rolesInverseLogic:!d.rolesInverseLogic})}),[j.map(e=>(0,a.jsx)(u,{label:e.label,onChange:t=>function(e,t){let o=d.roles;e?o.push(t):o=o.filter(e=>e!=t),p({roles:[...o]})}(t,e.value),checked:d.roles.indexOf(e.value)>-1},e.value))]]})})]})},"blockFilterControls");wp.hooks.addFilter("editor.BlockEdit","tsjippy/block-filter-controls",f)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "react/jsx-runtime"
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+(module) {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ },
+
+/***/ "@wordpress/api-fetch"
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+(module) {
+
+module.exports = window["wp"]["apiFetch"];
+
+/***/ },
+
+/***/ "@wordpress/components"
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ },
+
+/***/ "@wordpress/core-data"
+/*!**********************************!*\
+  !*** external ["wp","coreData"] ***!
+  \**********************************/
+(module) {
+
+module.exports = window["wp"]["coreData"];
+
+/***/ },
+
+/***/ "@wordpress/data"
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["data"];
+
+/***/ },
+
+/***/ "@wordpress/element"
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+(module) {
+
+module.exports = window["wp"]["element"];
+
+/***/ },
+
+/***/ "@wordpress/html-entities"
+/*!**************************************!*\
+  !*** external ["wp","htmlEntities"] ***!
+  \**************************************/
+(module) {
+
+module.exports = window["wp"]["htmlEntities"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
+/***/ "@wordpress/url"
+/*!*****************************!*\
+  !*** external ["wp","url"] ***!
+  \*****************************/
+(module) {
+
+module.exports = window["wp"]["url"];
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
+/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_html_entities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/html-entities */ "@wordpress/html-entities");
+/* harmony import */ var _wordpress_html_entities__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_html_entities__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _wordpress_url__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/url */ "@wordpress/url");
+/* harmony import */ var _wordpress_url__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_url__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
+const {
+  createHigherOrderComponent
+} = wp.compose;
+const {
+  Fragment
+} = wp.element;
+const {
+  InspectorControls
+} = wp.blockEditor;
+const {
+  PanelBody,
+  ToggleControl,
+  CheckboxControl
+} = wp.components;
+
+
+
+
+
+
+
+
+
+console.log("block filter loaded");
+
+/**
+ * Add attributes to block so we can later use them to actually folter the post content
+ */
+function addFilterAttribute(settings) {
+  if (typeof settings.attributes !== "undefined") {
+    settings.attributes = Object.assign(settings.attributes, {
+      hideOnMobile: {
+        type: "boolean",
+        default: false
+      },
+      onlyLoggedIn: {
+        type: "boolean",
+        default: false
+      },
+      onlyNotLoggedIn: {
+        type: "boolean",
+        default: false
+      },
+      onlyOn: {
+        type: "array",
+        default: []
+      },
+      phpFilters: {
+        type: "array",
+        default: []
+      },
+      phpFilterInverseLogic: {
+        type: "boolean",
+        default: false
+      },
+      roles: {
+        type: "array",
+        default: []
+      },
+      rolesInverseLogic: {
+        type: "boolean",
+        default: false
+      }
+    });
+  }
+  return settings;
+}
+
+// Add the filter to add the extra block attributes
+wp.hooks.addFilter("blocks.registerBlockType", "tsjippy/content-filter-attribute", addFilterAttribute);
+
+// Fetch the roles over rest api
+var availableRoles = [];
+document.addEventListener("DOMContentLoaded", () => {
+  _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default()({
+    path: tsjippy.restApiPrefix + `/content_filter/get_roles`,
+    method: "POST"
+  }).then(res => {
+    availableRoles = res;
+  });
+});
+
+// Fetch the allowed php filters over rest api
+var allowedPhpFilters = [];
+document.addEventListener("DOMContentLoaded", () => {
+  _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default()({
+    path: tsjippy.restApiPrefix + `/content_filter/get_allowed_php_filters`,
+    method: "POST"
+  }).then(res => {
+    allowedPhpFilters = res;
+  });
+});
+
+/**
+ * Add controls to panel
+ */
+const blockFilterControls = createHigherOrderComponent(BlockEdit => {
+  return props => {
+    const {
+      attributes,
+      setAttributes,
+      isSelected,
+      clientId
+    } = props;
+    var children = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.select)('core/block-editor').getBlocksByClientId(clientId)[0].innerBlocks;
+
+    // Only work on selected blocks
+    if (!isSelected) {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(Fragment, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(BlockEdit, {
+          ...props
+        })
+      });
+    }
+
+    /**
+     * SELECTED PAGES
+     */
+    // Define a variable and a function to update that variable
+    const [searchTerm, setSearchTerm] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useState)("");
+
+    // Selected page list
+    const {
+      initialSelectedPages,
+      selectedPagesResolved
+    } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => {
+      let onlyOn = attributes.onlyOn;
+
+      // Find all selected pages
+      const selectedPagesArgs = ["postType", "page", {
+        include: onlyOn
+      }];
+      return {
+        initialSelectedPages: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.store).getEntityRecords(...selectedPagesArgs),
+        selectedPagesResolved: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.store).hasFinishedResolution("getEntityRecords", selectedPagesArgs)
+      };
+    }, []);
+
+    /**
+     * Search page list
+     */
+    const {
+      pages,
+      pagesResolved
+    } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.useSelect)(select => {
+      // do not show results if not searching
+      if (!searchTerm) {
+        return {
+          pages: [],
+          pagesResolved: true
+        };
+      }
+      let onlyOn = attributes.onlyOn;
+
+      // find all pages excluding the already selected pages
+      const query = {
+        exclude: onlyOn,
+        search: searchTerm,
+        per_page: 100,
+        orderby: "relevance"
+      };
+      const pagesArgs = ["postType", "page", query];
+      return {
+        pages: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.store).getEntityRecords(...pagesArgs),
+        pagesResolved: select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_4__.store).hasFinishedResolution("getEntityRecords", pagesArgs)
+      };
+    }, [searchTerm]);
+    const PageSelected = function (checked) {
+      let onlyOn = attributes.onlyOn;
+      if (checked) {
+        // Add to stored page ids
+        setAttributes({
+          onlyOn: [...onlyOn, this]
+        });
+
+        // Add to selected pages list
+        setSelectedPages([...selectedPages, pages.find(p => p.id == this)]);
+      } else {
+        onlyOn = onlyOn.filter(p => {
+          return p != this;
+        });
+        if (onlyOn.length == 0) {
+          onlyOn = undefined;
+        }
+        setAttributes({
+          onlyOn: onlyOn
+        });
+      }
+    };
+    const GetSelectedPagesControls = function () {
+      let onlyOn = attributes.onlyOn;
+      if (onlyOn.length > 0) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("i", {
+            children: [" ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Currently selected pages", "tsjippy"), ":"]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(BuildCheckboxControls, {
+            hasResolved: selectedPagesResolved,
+            items: initialSelectedPages,
+            showNoResults: false
+          })]
+        });
+      } else {
+        return "";
+      }
+    };
+    const BuildCheckboxControls = function ({
+      hasResolved,
+      items,
+      showNoResults = true
+    }) {
+      if (!hasResolved) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {})]
+        });
+      }
+      if (!items?.length) {
+        if (showNoResults) {
+          if (!searchTerm) {
+            return "";
+          }
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+            children: [" ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("No search results", "tsjippy")]
+          });
+        }
+        return "";
+      }
+      return items?.map(page => {
+        let onlyOn = attributes.onlyOn;
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(CheckboxControl, {
+          label: (0,_wordpress_html_entities__WEBPACK_IMPORTED_MODULE_5__.decodeEntities)(page.title.rendered),
+          onChange: PageSelected.bind(page.id),
+          checked: onlyOn.includes(page.id)
+        });
+      });
+    };
+    const [selectedPages, setSelectedPages] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+    const [selectedPagesControls, setSelectedPagesControls] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useState)(GetSelectedPagesControls());
+
+    // Update selectedPagesControls on page resolve
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      setSelectedPages(initialSelectedPages);
+    }, [selectedPagesResolved]);
+
+    // Update selectedPagesControls on check/uncheck
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      setSelectedPages(selectedPages.filter(p => {
+        return attributes.onlyOn.includes(p.id);
+      }));
+    }, [attributes.onlyOn]);
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      setSelectedPagesControls(BuildCheckboxControls({
+        hasResolved: selectedPagesResolved,
+        items: selectedPages,
+        showNoResults: false
+      }));
+    }, [selectedPages]);
+
+    /**
+     * Update the children block if we update a parent blocks filters
+     */
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+      if (children.length > 0) {
+        // Update the child block's attributes
+        let inherited = {};
+
+        /**
+         * Check if booleans are true
+         */
+        let boolKeys = ['onlyLoggedIn', 'onlyNotLoggedIn', 'onlyOn'];
+
+        // Set on the child only if true
+        boolKeys.forEach(key => {
+          console.log(attributes[key]);
+          if (attributes[key]) {
+            inherited[key] = attributes[key];
+            inherited[key + 'Inherited'] = true; // mark as inherited
+          }
+        });
+
+        /**
+         * Check if arrays are not empty
+         */
+        let arrayKeys = ['phpFilters', 'roles'];
+
+        // Set on the child only if true
+        arrayKeys.forEach(key => {
+          console.log(attributes[key]);
+          if (attributes[key].length > 0) {
+            inherited[key] = attributes[key];
+            inherited[key + 'Inherited'] = true; // mark as inherited
+          }
+        });
+        console.log(inherited);
+        children.forEach(function (child) {
+          (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/block-editor').updateBlockAttributes(child.clientId, inherited);
+        });
+      }
+    }, [attributes.hideOnMobile, attributes.onlyLoggedIn, attributes.onlyNotLoggedIn, attributes.onlyOn, attributes.phpFilters, attributes.phpFilterInverseLogic, attributes.roles, attributes.rolesInverseLogic]);
+
+    /**
+     * PHP Filters
+     */
+    const createFilterControls = function () {
+      return [allowedPhpFilters.map(data => {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(CheckboxControl, {
+          label: data,
+          onChange: checked => onPhpFiltersChanged(checked, data),
+          checked: attributes.phpFilters.indexOf(data) > -1
+        }, data);
+      })];
+    };
+    const onPhpFiltersChanged = function (checked, filterName) {
+      let phpFilters = attributes.phpFilters;
+
+      // A role just got selected
+      if (checked) {
+        // Add to stored roles
+        phpFilters.push(filterName);
+      } else {
+        // remove from array
+        phpFilters = phpFilters.filter(p => {
+          return p != filterName;
+        });
+      }
+
+      // Store in Attributes
+      // We need to set a new array to trigger a re-render
+      setAttributes({
+        phpFilters: [...phpFilters]
+      });
+    };
+
+    /**
+     * ROLES
+     */
+    const createRolesSelectors = () => {
+      return [availableRoles.map(data => {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(CheckboxControl, {
+          label: data.label,
+          onChange: checked => onRoleSelected(checked, data.value),
+          checked: attributes.roles.indexOf(data.value) > -1
+        }, data.value);
+      })];
+    };
+
+    /**
+     * Runs when a role gets (de)selected
+     * @param {bool} checked true when selected, false otherwise
+     */
+    const onRoleSelected = function (checked, roleSlug) {
+      let roles = attributes.roles;
+
+      // A role just got selected
+      if (checked) {
+        // Add to stored roles
+        roles.push(roleSlug);
+      } else {
+        // remove from array
+        roles = roles.filter(p => {
+          return p != roleSlug;
+        });
+      }
+
+      // Store in Attributes
+      // Store as a new array to trigger a new render
+      setAttributes({
+        roles: [...roles]
+      });
+    };
+    const disabledMessage = () => {
+      const inheritedAttributes = Object.keys(attributes).filter(k => k.includes('Inherited') && attributes[k]);
+      if (inheritedAttributes.length > 0) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("b", {
+          children: "Some attributes are set from the parent block..."
+        });
+      }
+      return '';
+    };
+
+    /**
+     * Actual Rendering
+     */
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(BlockEdit, {
+        ...props
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(InspectorControls, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(PanelBody, {
+          title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Block Visibility", "tsjippy"),
+          initialOpen: false,
+          children: [disabledMessage(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.hideOnMobileInherited,
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(ToggleControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Hide on mobile", "tsjippy"),
+              checked: !!attributes.hideOnMobile,
+              onChange: () => setAttributes({
+                hideOnMobile: !attributes.hideOnMobile
+              })
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.onlyLoggedInInherited,
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(ToggleControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Hide if not logged in", "tsjippy"),
+              checked: !!attributes.onlyLoggedIn,
+              onChange: () => setAttributes({
+                onlyLoggedIn: !attributes.onlyLoggedIn
+              })
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.onlyNotLoggedInInherited,
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(ToggleControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Hide if logged in", "tsjippy"),
+              checked: !!attributes.onlyNotLoggedIn,
+              onChange: () => setAttributes({
+                onlyNotLoggedIn: !attributes.onlyNotLoggedIn
+              })
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.phpFiltersInherited,
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("b", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("PHP Functions To Apply", "tsjippy")
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Select to hide", "tsjippy"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(ToggleControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Inverse Logic", "tsjippy"),
+              checked: !!attributes.phpFilterInverseLogic,
+              onChange: () => setAttributes({
+                phpFilterInverseLogic: !attributes.phpFilterInverseLogic
+              })
+            }), createFilterControls()]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.onlyOnInherited,
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("strong", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Select pages", "tsjippy")
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Select pages you want this widget to show on", "tsjippy"), ".", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Leave empty for all pages", "tsjippy"), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), selectedPagesControls, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("i", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Use searchbox below to search for more pages to include", "tsjippy")
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SearchControl, {
+              onChange: setSearchTerm,
+              value: searchTerm
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(BuildCheckboxControls, {
+              hasResolved: pagesResolved,
+              items: pages
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Disabled, {
+            isDisabled: attributes.rolesInherited,
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("b", {
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Roles Who Can See This Block", "tsjippy")
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(ToggleControl, {
+              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Inverse Logic", "tsjippy"),
+              checked: !!attributes.rolesInverseLogic,
+              onChange: () => setAttributes({
+                rolesInverseLogic: !attributes.rolesInverseLogic
+              })
+            }), createRolesSelectors()]
+          })]
+        })
+      })]
+    });
+  };
+}, "blockFilterControls");
+wp.hooks.addFilter("editor.BlockEdit", "tsjippy/block-filter-controls", blockFilterControls);
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

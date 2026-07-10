@@ -6,6 +6,7 @@ const { PanelBody, ToggleControl, CheckboxControl } = wp.components;
 import {
   SearchControl,
   Spinner,
+  Disabled,
   __experimentalInputControl as InputControl,
 } from "@wordpress/components";
 import { useState, useEffect } from "@wordpress/element";
@@ -14,6 +15,7 @@ import { store as coreDataStore } from "@wordpress/core-data";
 import { decodeEntities } from "@wordpress/html-entities";
 import apiFetch from "@wordpress/api-fetch";
 import { addQueryArgs } from "@wordpress/url";
+import { dispatch, select } from "@wordpress/data";
 
 console.log("block filter loaded");
 
@@ -94,7 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
   return (props) => {
-    const { attributes, setAttributes, isSelected } = props;
+    const { attributes, setAttributes, isSelected, clientId } = props;
+
+    var children = select('core/block-editor').getBlocksByClientId(clientId)[0].innerBlocks;
 
     // Only work on selected blocks
     if (!isSelected) {
@@ -279,6 +283,62 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
     }, [selectedPages]);
 
     /**
+     * Update the children block if we update a parent blocks filters
+     */
+    useEffect( 
+      () => {
+        if(children.length > 0){
+          // Update the child block's attributes
+          let inherited = {}
+
+          /**
+           * Check if booleans are true
+           */
+          let boolKeys  = [
+            'onlyLoggedIn',
+            'onlyNotLoggedIn',
+            'onlyOn'
+          ];
+
+          // Set on the child only if true
+          boolKeys.forEach(key => {
+            console.log(attributes[key]);
+
+            if(attributes[key]){
+              inherited[key]  = attributes[key];
+              inherited[key + 'Inherited'] = true; // mark as inherited
+            }
+          });
+
+          /**
+           * Check if arrays are not empty
+           */
+          let arrayKeys  = [
+            'phpFilters',
+            'roles',
+          ];
+
+          // Set on the child only if true
+          arrayKeys.forEach(key => {
+            console.log(attributes[key]);
+
+            if(attributes[key].length > 0){
+              inherited[key]  = attributes[key];
+              inherited[key + 'Inherited'] = true; // mark as inherited
+            }
+          });
+
+          console.log(inherited);
+
+          children.forEach(function(child){
+              dispatch('core/block-editor').updateBlockAttributes(child.clientId, inherited);
+          });
+        }
+      }, 
+      [ attributes.hideOnMobile, attributes.onlyLoggedIn, attributes.onlyNotLoggedIn, attributes.onlyOn, attributes.phpFilters, attributes.phpFilterInverseLogic, attributes.roles, attributes.rolesInverseLogic ] 
+    );
+
+    /**
      * PHP Filters
      */
     const createFilterControls = function () {
@@ -367,6 +427,16 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
 
     };
 
+    const disabledMessage = () => {
+      const inheritedAttributes = Object.keys(attributes).filter(k => k.includes('Inherited') && attributes[k]);
+
+      if(inheritedAttributes.length > 0){
+        return <b>Some attributes are set from the parent block...</b>
+      }
+
+      return '';
+    }
+
     /**
      * Actual Rendering
      */
@@ -375,71 +445,90 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
         <BlockEdit {...props} />
         <InspectorControls>
           <PanelBody
-            title={__("Block Visibility", "tsjippy")}
-            initialOpen={false}
+            title       = {__("Block Visibility", "tsjippy")}
+            initialOpen = {false}
           >
-            <ToggleControl
-              label={__("Hide on mobile", "tsjippy")}
-              checked={!!attributes.hideOnMobile}
-              onChange={() =>
-                setAttributes({ hideOnMobile: !attributes.hideOnMobile })
-              }
-            />
-            <ToggleControl
-              label={__("Hide if not logged in", "tsjippy")}
-              checked={!!attributes.onlyLoggedIn}
-              onChange={() =>
-                setAttributes({ onlyLoggedIn: !attributes.onlyLoggedIn })
-              }
-            />
-            <ToggleControl
-              label={__("Hide if logged in", "tsjippy")}
-              checked={!!attributes.onlyNotLoggedIn}
-              onChange={() =>
-                setAttributes({ onlyNotLoggedIn: !attributes.onlyNotLoggedIn })
-              }
-            />
-            <b>{__("PHP Functions To Apply", "tsjippy")}</b>
+            { disabledMessage() }
+            <Disabled isDisabled={ attributes.hideOnMobileInherited }>
+              <ToggleControl
+                label={__("Hide on mobile", "tsjippy")}
+                checked={!!attributes.hideOnMobile}
+                onChange={() =>
+                  setAttributes({ hideOnMobile: !attributes.hideOnMobile })
+                }
+              />
+            </Disabled>
+
+            <Disabled isDisabled={ attributes.onlyLoggedInInherited }>
+              <ToggleControl
+                label={__("Hide if not logged in", "tsjippy")}
+                checked={!!attributes.onlyLoggedIn}
+                onChange={() =>
+                  setAttributes({ onlyLoggedIn: !attributes.onlyLoggedIn })
+                }
+              />
+            </Disabled>
+
+            <Disabled isDisabled={ attributes.onlyNotLoggedInInherited }>
+              <ToggleControl
+                label={__("Hide if logged in", "tsjippy")}
+                checked={!!attributes.onlyNotLoggedIn}
+                onChange={() =>
+                  setAttributes({ onlyNotLoggedIn: !attributes.onlyNotLoggedIn })
+                }
+              />
+            </Disabled>
+            
             <br></br>
-            {__("Select to hide", "tsjippy")}
-            <ToggleControl
-              label={__("Inverse Logic", "tsjippy")}
-              checked={!!attributes.phpFilterInverseLogic}
-              onChange={() =>
-                setAttributes({
-                  phpFilterInverseLogic: !attributes.phpFilterInverseLogic,
-                })
-              }
-            />
-            {createFilterControls()}
-            <strong>{__("Select pages", "tsjippy")}</strong>
-            <br></br>
-            {__("Select pages you want this widget to show on", "tsjippy")}.
-            <br></br>
-            {__("Leave empty for all pages", "tsjippy")}
-            <br></br>
-            <br></br>
-            {selectedPagesControls}
-            <i>
-              {__(
-                "Use searchbox below to search for more pages to include",
-                "tsjippy",
-              )}
-            </i>
-            <SearchControl onChange={setSearchTerm} value={searchTerm} />
-            <BuildCheckboxControls hasResolved={pagesResolved} items={pages} />
-            <b>{__("Roles Who Can See This Block", "tsjippy")}</b>
-            <br></br>
-            <ToggleControl
-              label={__("Inverse Logic", "tsjippy")}
-              checked={!!attributes.rolesInverseLogic}
-              onChange={() =>
-                setAttributes({
-                  rolesInverseLogic: !attributes.rolesInverseLogic,
-                })
-              }
-            />
-            { createRolesSelectors() }
+            <Disabled isDisabled={ attributes.phpFiltersInherited }>
+              <b>{__("PHP Functions To Apply", "tsjippy")}</b>
+              <br></br>
+              {__("Select to hide", "tsjippy")}
+              <ToggleControl
+                label={__("Inverse Logic", "tsjippy")}
+                checked={!!attributes.phpFilterInverseLogic}
+                onChange={() =>
+                  setAttributes({
+                    phpFilterInverseLogic: !attributes.phpFilterInverseLogic,
+                  })
+                }
+              />
+              {createFilterControls()}
+            </Disabled>
+
+            <Disabled isDisabled={ attributes.onlyOnInherited }>
+              <strong>{__("Select pages", "tsjippy")}</strong>
+              <br></br>
+              {__("Select pages you want this widget to show on", "tsjippy")}.
+              <br></br>
+              {__("Leave empty for all pages", "tsjippy")}
+              <br></br>
+              <br></br>
+              {selectedPagesControls}
+              <i>
+                {__(
+                  "Use searchbox below to search for more pages to include",
+                  "tsjippy",
+                )}
+              </i>
+              <SearchControl onChange={setSearchTerm} value={searchTerm} />
+              <BuildCheckboxControls hasResolved={pagesResolved} items={pages} />
+            </Disabled>
+
+            <Disabled isDisabled={ attributes.rolesInherited }>
+              <b>{__("Roles Who Can See This Block", "tsjippy")}</b>
+              <br></br>
+              <ToggleControl
+                label={__("Inverse Logic", "tsjippy")}
+                checked={!!attributes.rolesInverseLogic}
+                onChange={() =>
+                  setAttributes({
+                    rolesInverseLogic: !attributes.rolesInverseLogic,
+                  })
+                }
+              />
+              { createRolesSelectors() }
+            </Disabled>
           </PanelBody>
         </InspectorControls>
       </Fragment>

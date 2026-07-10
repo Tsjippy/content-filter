@@ -24,7 +24,7 @@ function addBlockJs()
 /**
  * Add the filter
  */
-add_filter('render_block', __NAMESPACE__ . '\filterBlock', 10, 2);
+add_filter('render_block', __NAMESPACE__ . '\filterBlock', 10, 3);
 
 /**
  * Filters the block content based on the block attributes
@@ -32,7 +32,7 @@ add_filter('render_block', __NAMESPACE__ . '\filterBlock', 10, 2);
  * @param    string   $blockContent The content of the block
  * @param    array    $block        The block attributes
  */
-function filterBlock($blockContent, $block)
+function filterBlock($blockContent, $block, $instance)
 {
     $filtered   = false;
 
@@ -103,7 +103,7 @@ function filterBlock($blockContent, $block)
     }
 
     if($filtered){
-        if(($_REQUEST['context'] ?? '') == "edit"){
+        if(($_REQUEST['action'] ?? $_REQUEST['context'] ?? '') == 'edit'){
             return "<div class='warning'>This block is invisible outside the block editor due to filter conditions.</div>";
         }
 
