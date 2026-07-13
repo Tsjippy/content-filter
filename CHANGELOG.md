@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- updated to tsjippy-news-gallery-query filter
 
 ### Fixed
 
 ### Updated
+
+## [10.4.4] - 2026-07-13
+
+
+### Changed
+- updated to tsjippy-news-gallery-query filter
 
 ## [10.4.3] - 2026-07-12
 
