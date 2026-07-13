@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- updated to tsjippy-news-gallery-query filter
 
 ### Fixed
 
