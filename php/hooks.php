@@ -102,8 +102,10 @@ function addAttachment($postId)
     return $attachmentLibrary->addAttachment($postId);
 }
 
-add_filter('tsjippy-theme-news-query', function ($args, $user) {
-    //Hide confidential items on the front page
+add_filter('tsjippy-news-gallery-query', function ($args) {
+    $user   = wp_get_current_user();    
+
+    //Hide confidential items in the news gallery
     if (array_intersect(SETTINGS['confidential-roles'] ?? [], $user->roles)) {
         $args['tax_query'][] =
             array(
@@ -115,7 +117,7 @@ add_filter('tsjippy-theme-news-query', function ($args, $user) {
     }
 
     return $args;
-}, 10, 2);
+});
 
 add_filter( 'register_block_type_args', __NAMESPACE__.'\addGlobalAttributes' );
 /**
