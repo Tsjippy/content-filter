@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- readme update
 
 ### Fixed
 
 ### Updated
+
+## [10.4.8] - 2026-07-15
+
+
+### Changed
+- readme update
 
 ## [10.4.7] - 2026-07-14
 
