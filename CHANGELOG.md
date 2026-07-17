@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- block filtering bug
 
 ### Updated
 
