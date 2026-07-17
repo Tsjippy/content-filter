@@ -15,5 +15,17 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^32.3.0"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "latest",
+		"@wordpress/block-editor": "latest",
+		"@wordpress/components": "latest",
+		"@wordpress/compose": "^8.4.0",
+		"@wordpress/core-data": "latest",
+		"@wordpress/data": "latest",
+		"@wordpress/element": "^8.3.0",
+		"@wordpress/html-entities": "latest",
+		"@wordpress/i18n": "latest",
+		"@wordpress/url": "latest"
 	}
 }

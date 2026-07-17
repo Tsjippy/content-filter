@@ -1,9 +1,11 @@
 import { __ } from "@wordpress/i18n";
-const { createHigherOrderComponent } = wp.compose;
-const { Fragment } = wp.element;
-const { InspectorControls } = wp.blockEditor;
-const { PanelBody, ToggleControl, CheckboxControl } = wp.components;
+import { createHigherOrderComponent } from '@wordpress/compose';
+import { Fragment } from '@wordpress/element';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
+  PanelBody, 
+  ToggleControl, 
+  CheckboxControl,
   SearchControl,
   Spinner,
   Disabled,
@@ -16,8 +18,6 @@ import { decodeEntities } from "@wordpress/html-entities";
 import apiFetch from "@wordpress/api-fetch";
 import { addQueryArgs } from "@wordpress/url";
 import { dispatch, select } from "@wordpress/data";
-
-console.log("block filter loaded");
 
 /**
  * Add attributes to block so we can later use them to actually folter the post content
@@ -98,7 +98,10 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
   return (props) => {
     const { attributes, setAttributes, isSelected, clientId } = props;
 
-    var children = select('core/block-editor').getBlocksByClientId(clientId)[0].innerBlocks;
+    var children = select('core/block-editor').getBlocksByClientId(clientId);
+    if(children.length > 0){
+      children = children[0].innerBlocks;
+    }
 
     // Only work on selected blocks
     if (!isSelected) {
@@ -302,7 +305,6 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
 
           // Set on the child only if true
           boolKeys.forEach(key => {
-            console.log(attributes[key]);
 
             if(attributes[key]){
               inherited[key]  = attributes[key];
@@ -320,15 +322,12 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
 
           // Set on the child only if true
           arrayKeys.forEach(key => {
-            console.log(attributes[key]);
 
             if(attributes[key].length > 0){
               inherited[key]  = attributes[key];
               inherited[key + 'Inherited'] = true; // mark as inherited
             }
           });
-
-          console.log(inherited);
 
           children.forEach(function(child){
               dispatch('core/block-editor').updateBlockAttributes(child.clientId, inherited);
