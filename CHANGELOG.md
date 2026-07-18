@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- bugfix
 
 ### Fixed
 - block filtering bug
