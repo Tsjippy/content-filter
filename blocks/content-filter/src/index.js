@@ -99,7 +99,7 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
     const { attributes, setAttributes, isSelected, clientId } = props;
 
     var children = select('core/block-editor').getBlocksByClientId(clientId);
-    if(children.length > 0){
+    if(children.length > 0 && children[0] != null){
       children = children[0].innerBlocks;
     }
 
