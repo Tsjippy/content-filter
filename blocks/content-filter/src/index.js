@@ -23,6 +23,10 @@ import { dispatch, select } from "@wordpress/data";
  * Add attributes to block so we can later use them to actually folter the post content
  */
 function addFilterAttribute(settings) {
+  if (typeof settings.attributes === "undefined") {
+    settings.attributes = {};
+  }
+  
   settings.attributes = Object.assign(settings.attributes, {
     hideOnMobile: {
       type: "boolean",
