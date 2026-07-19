@@ -23,42 +23,41 @@ import { dispatch, select } from "@wordpress/data";
  * Add attributes to block so we can later use them to actually folter the post content
  */
 function addFilterAttribute(settings) {
-  if (typeof settings.attributes !== "undefined") {
-    settings.attributes = Object.assign(settings.attributes, {
-      hideOnMobile: {
-        type: "boolean",
-        default: false,
-      },
-      onlyLoggedIn: {
-        type: "boolean",
-        default: false,
-      },
-      onlyNotLoggedIn: {
-        type: "boolean",
-        default: false,
-      },
-      onlyOn: {
-        type: "array",
-        default: [],
-      },
-      phpFilters: {
-        type: "array",
-        default: [],
-      },
-      phpFilterInverseLogic: {
-        type: "boolean",
-        default: false,
-      },
-      roles: {
-        type: "array",
-        default: [],
-      },
-      rolesInverseLogic: {
-        type: "boolean",
-        default: false,
-      },
-    });
-  }
+  settings.attributes = Object.assign(settings.attributes, {
+    hideOnMobile: {
+      type: "boolean",
+      default: false,
+    },
+    onlyLoggedIn: {
+      type: "boolean",
+      default: false,
+    },
+    onlyNotLoggedIn: {
+      type: "boolean",
+      default: false,
+    },
+    onlyOn: {
+      type: "array",
+      default: [],
+    },
+    phpFilters: {
+      type: "array",
+      default: [],
+    },
+    phpFilterInverseLogic: {
+      type: "boolean",
+      default: false,
+    },
+    roles: {
+      type: "array",
+      default: [],
+    },
+    rolesInverseLogic: {
+      type: "boolean",
+      default: false,
+    },
+  });
+  
   return settings;
 }
 
