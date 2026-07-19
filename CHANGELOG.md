@@ -8,6 +8,7 @@
 
 ### Fixed
 - block filtering bug
+- create attribute settings object if it does not exist
 
 ### Updated
 
