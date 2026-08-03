@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- functionality to filter embeded posts
 
 ### Changed
 - bugfix
