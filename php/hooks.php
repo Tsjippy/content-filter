@@ -204,3 +204,7 @@ function addGlobalAttributes( $args ) {
 
 	return $args;
 }
+
+add_filter('tsjippy-embed-page-allow-access', function($allowAccess, $post) {
+    return isProtected($post) ? false : $allowAccess;
+}, 10, 2); // Allow public access

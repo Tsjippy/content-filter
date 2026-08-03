@@ -59,12 +59,16 @@ function robotsText($output, $public)
 
 /**
  * Checks if current page is protected
+ * 
+ * @param    \WP_Post        $post        The current post object empty to use the global post object
  *
  * @return    boolean        false if visible, true if protected
  */
-function isProtected()
+function isProtected($post = null)
 {
-    global    $post;
+    if ( empty( $post ) && isset( $GLOBALS['post'] ) ) {
+		$post = $GLOBALS['post'];
+	}
 
     $public                = false;
     foreach (get_post_taxonomies() as $taxonomy) {
@@ -100,7 +104,6 @@ add_filter('tsjippy-login-add-login-button', __NAMESPACE__ . '\loginButton');
  */
 function loginButton($show)
 {
-
     return !isProtected();
 }
 
