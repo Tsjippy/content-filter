@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.5.0] - 2026-08-22
+
+
+### Added
 - functionality to filter embeded posts
 
 ### Changed
@@ -10,8 +21,6 @@
 ### Fixed
 - block filtering bug
 - create attribute settings object if it does not exist
-
-### Updated
 
 ## [10.4.9] - 2026-07-15
 
