@@ -5,14 +5,14 @@ namespace TSJIPPY\CONTENTFILTER;
 /**
  * Plugin Name:          Tsjippy Content Filter
  * Description:          This plugin filters all content, excluding content with the public category, to be only available to logged-in users.
- * Version:              10.5.7
+ * Version:              10.5.8
  * Author:               Ewald Harmsen
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
  * Requires PHP:         8.3
- * Tested up to:         7.0
+ * Tested up to:         7.1
  * Plugin URI:           https://github.com/Tsjippy/contentfilter/
- * Tested:               7.0
+ * Tested:               7.1
  * TextDomain:           tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
