@@ -12,12 +12,11 @@ if (! defined('ABSPATH')) exit;
 add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\addBlockJs');
 function addBlockJs()
 {
-    wp_enqueue_script(
-        'tsjippy-content-filter',
+    wp_enqueue_script_module(
+        '@tsjippy/content-filter',
         TSJIPPY\pathToUrl(PLUGINPATH.'blocks/content-filter/build/index.js'),
         ['wp-blocks', 'wp-dom', 'wp-dom-ready', 'wp-edit-post'],
-        PLUGINVERSION,
-        true
+        PLUGINVERSION
     );
 }
 

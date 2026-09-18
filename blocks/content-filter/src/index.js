@@ -76,7 +76,7 @@ wp.hooks.addFilter(
 var availableRoles = [];
 document.addEventListener("DOMContentLoaded", () => {
   apiFetch({
-    path: tsjippy.restApiPrefix + `/content_filter/get_roles`,
+    path: `tsjippy/v2/content_filter/get_roles`,
     method: "POST",
   }).then((res) => {
     availableRoles = res;
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 var allowedPhpFilters = [];
 document.addEventListener("DOMContentLoaded", () => {
   apiFetch({
-    path: tsjippy.restApiPrefix + `/content_filter/get_allowed_php_filters`,
+    path: `tsjippy/v2/content_filter/get_allowed_php_filters`,
     method: "POST",
   }).then((res) => {
     allowedPhpFilters = res;
