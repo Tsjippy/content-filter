@@ -22,6 +22,11 @@ function killPageLoad()
         wp_die('This content is restricted. <br>You will be able to see this page as soon as you login. ', 'This content is restricted. ');
 
         print_footer_scripts();
+
+        if (function_exists('wp_script_modules')) {
+            wp_script_modules()->print_enqueued_script_modules();
+            wp_script_modules()->print_script_module_data();
+        }
         exit;
     }
 }
