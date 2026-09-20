@@ -13,5 +13,5 @@ add_action('wp_enqueue_media', __NAMESPACE__ . '\loadAssets');
  */
 function loadAssets()
 {
-    wp_enqueue_script_module('@tsjippy/library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library.min.js'), [], PLUGINVERSION);
+    wp_enqueue_script_module('@tsjippy/library_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/library' . TSJIPPY\JSEXTENSION), [], PLUGINVERSION);
 }
