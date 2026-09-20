@@ -4,13 +4,20 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.5] - 2026-09-20
+
+
+### Changed
 - js to modules
 - load minification js depending on SCRIPT_DEBUG constant
 
 ### Fixed
 - print js modules when forced to login
-
-### Updated
 
 ## [10.6.4] - 2026-09-16
 
