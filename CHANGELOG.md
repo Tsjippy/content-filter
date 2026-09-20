@@ -7,6 +7,7 @@
 - js to modules
 
 ### Fixed
+- print js modules when forced to login
 
 ### Updated
 
