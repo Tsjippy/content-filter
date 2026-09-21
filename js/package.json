@@ -4,9 +4,9 @@
   "description": "Filters appendixes on visibility",
   "main": "./library.js",
   "scripts": {
-    "build": "webpack --entry ./library.js --output-path . --output-filename library.min.js --progress --mode=production --devtool source-map",
-    "watch": "webpack --entry ./library.js --output-path . --output-filename library.min.js --progress--devtool source-map",
-    "all": "run-p build"
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress",
+    "all": "npm run build"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
