@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.6.6] - 2026-09-22
+
+
+### Changed
 - js resturcture
 
 ### Fixed
 - print footer
-
-### Updated
 
 ## [10.6.5] - 2026-09-20
 
