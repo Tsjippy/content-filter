@@ -7,6 +7,7 @@
 - js resturcture
 
 ### Fixed
+- print footer
 
 ### Updated
 
