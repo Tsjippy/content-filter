@@ -1,32 +1,28 @@
 import { __ } from "@wordpress/i18n";
-import { createHigherOrderComponent } from '@wordpress/compose';
-import { Fragment } from '@wordpress/element';
-import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import { createHigherOrderComponent } from "@wordpress/compose";
+import { Fragment, useState, useEffect } from "@wordpress/element";
+import { InspectorControls } from "@wordpress/block-editor";
 import {
-  PanelBody, 
-  ToggleControl, 
+  PanelBody,
+  ToggleControl,
   CheckboxControl,
   SearchControl,
   Spinner,
   Disabled,
-  __experimentalInputControl as InputControl,
 } from "@wordpress/components";
-import { useState, useEffect } from "@wordpress/element";
-import { useSelect } from "@wordpress/data";
+import { useSelect, dispatch, select } from "@wordpress/data";
 import { store as coreDataStore } from "@wordpress/core-data";
 import { decodeEntities } from "@wordpress/html-entities";
 import apiFetch from "@wordpress/api-fetch";
-import { addQueryArgs } from "@wordpress/url";
-import { dispatch, select } from "@wordpress/data";
 
 /**
- * Add attributes to block so we can later use them to actually folter the post content
+ * Add attributes to block so we can later use them to actually filter the post content
  */
 function addFilterAttribute(settings) {
   if (typeof settings.attributes === "undefined") {
     settings.attributes = {};
   }
-  
+
   settings.attributes = Object.assign(settings.attributes, {
     hideOnMobile: {
       type: "boolean",
@@ -61,7 +57,7 @@ function addFilterAttribute(settings) {
       default: false,
     },
   });
-  
+
   return settings;
 }
 
@@ -69,28 +65,28 @@ function addFilterAttribute(settings) {
 wp.hooks.addFilter(
   "blocks.registerBlockType",
   "tsjippy/content-filter-attribute",
-  addFilterAttribute,
+  addFilterAttribute
 );
 
 // Fetch the roles over rest api
-var availableRoles = [];
+let availableRoles = [];
 document.addEventListener("DOMContentLoaded", () => {
   apiFetch({
     path: `tsjippy/v2/content_filter/get_roles`,
     method: "POST",
   }).then((res) => {
-    availableRoles = res;
+    availableRoles = res || [];
   });
 });
 
 // Fetch the allowed php filters over rest api
-var allowedPhpFilters = [];
+let allowedPhpFilters = [];
 document.addEventListener("DOMContentLoaded", () => {
   apiFetch({
     path: `tsjippy/v2/content_filter/get_allowed_php_filters`,
     method: "POST",
   }).then((res) => {
-    allowedPhpFilters = res;
+    allowedPhpFilters = res || [];
   });
 });
 
@@ -101,8 +97,13 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
   return (props) => {
     const { attributes, setAttributes, isSelected, clientId } = props;
 
-    var children = select('core/block-editor').getBlocksByClientId(clientId);
-    if(children.length > 0 && children[0] != null){
+    // Ensure array attributes are always fallback-safe arrays
+    const onlyOn = attributes.onlyOn || [];
+    const phpFilters = attributes.phpFilters || [];
+    const roles = attributes.roles || [];
+
+    let children = select("core/block-editor").getBlocksByClientId(clientId);
+    if (children.length > 0 && children[0] != null) {
       children = children[0].innerBlocks;
     }
 
@@ -118,36 +119,36 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
     /**
      * SELECTED PAGES
      */
-    // Define a variable and a function to update that variable
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedPages, setSelectedPages] = useState([]);
 
     // Selected page list
     const { initialSelectedPages, selectedPagesResolved } = useSelect(
-      (select) => {
-        let onlyOn = attributes.onlyOn;
-
-        // Find all selected pages
+      (selectStore) => {
         const selectedPagesArgs = ["postType", "page", { include: onlyOn }];
 
         return {
-          initialSelectedPages: select(coreDataStore).getEntityRecords(
-            ...selectedPagesArgs,
-          ),
-          selectedPagesResolved: select(coreDataStore).hasFinishedResolution(
-            "getEntityRecords",
-            selectedPagesArgs,
-          ),
+          initialSelectedPages:
+            onlyOn.length > 0
+              ? selectStore(coreDataStore).getEntityRecords(...selectedPagesArgs)
+              : [],
+          selectedPagesResolved:
+            onlyOn.length > 0
+              ? selectStore(coreDataStore).hasFinishedResolution(
+                  "getEntityRecords",
+                  selectedPagesArgs
+                )
+              : true,
         };
       },
-      [],
+      [onlyOn]
     );
 
     /**
      * Search page list
      */
     const { pages, pagesResolved } = useSelect(
-      (select) => {
-        // do not show results if not searching
+      (selectStore) => {
         if (!searchTerm) {
           return {
             pages: [],
@@ -155,9 +156,6 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
           };
         }
 
-        let onlyOn = attributes.onlyOn;
-
-        // find all pages excluding the already selected pages
         const query = {
           exclude: onlyOn,
           search: searchTerm,
@@ -168,290 +166,189 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
         const pagesArgs = ["postType", "page", query];
 
         return {
-          pages: select(coreDataStore).getEntityRecords(...pagesArgs),
-          pagesResolved: select(coreDataStore).hasFinishedResolution(
+          pages: selectStore(coreDataStore).getEntityRecords(...pagesArgs) || [],
+          pagesResolved: selectStore(coreDataStore).hasFinishedResolution(
             "getEntityRecords",
-            pagesArgs,
+            pagesArgs
           ),
         };
       },
-      [searchTerm],
+      [searchTerm, onlyOn]
     );
 
-    const PageSelected = function (checked) {
-      let onlyOn = attributes.onlyOn;
-
+    const handlePageToggle = (checked, pageId) => {
       if (checked) {
-        // Add to stored page ids
-        setAttributes({ onlyOn: [...onlyOn, this] });
+        const newOnlyOn = [...onlyOn, pageId];
+        setAttributes({ onlyOn: newOnlyOn });
 
-        // Add to selected pages list
-        setSelectedPages([...selectedPages, pages.find((p) => p.id == this)]);
-      } else {
-        onlyOn = onlyOn.filter((p) => {
-          return p != this;
-        });
-
-        if (onlyOn.length == 0) {
-          onlyOn = undefined;
+        const pageToAdd = pages.find((p) => p.id === pageId);
+        if (pageToAdd && !selectedPages.some((p) => p.id === pageId)) {
+          setSelectedPages([...selectedPages, pageToAdd]);
         }
-        setAttributes({ onlyOn: onlyOn });
-      }
-    };
-
-    const GetSelectedPagesControls = function () {
-      let onlyOn = attributes.onlyOn;
-
-      if (onlyOn.length > 0) {
-        return (
-          <>
-            <i> {__("Currently selected pages", "tsjippy")}:</i>
-            <br></br>
-
-            <BuildCheckboxControls
-              hasResolved={selectedPagesResolved}
-              items={initialSelectedPages}
-              showNoResults={false}
-            />
-          </>
-        );
       } else {
-        return "";
+        const newOnlyOn = onlyOn.filter((id) => id !== pageId);
+        setAttributes({ onlyOn: newOnlyOn });
       }
     };
 
-    const BuildCheckboxControls = function ({
-      hasResolved,
-      items,
-      showNoResults = true,
-    }) {
+    const BuildCheckboxControls = ({ hasResolved, items, showNoResults = true }) => {
       if (!hasResolved) {
         return (
           <>
             <Spinner />
-            <br></br>
+            <br />
           </>
         );
       }
 
-      if (!items?.length) {
+      if (!items || !items.length) {
         if (showNoResults) {
           if (!searchTerm) {
-            return "";
+            return null;
           }
-          return <div> {__("No search results", "tsjippy")}</div>;
+          return <div>{__("No search results", "tsjippy")}</div>;
         }
-
-        return "";
+        return null;
       }
 
-      return items?.map((page) => {
-        let onlyOn = attributes.onlyOn;
-
-        return (
-          <CheckboxControl
-            label={decodeEntities(page.title.rendered)}
-            onChange={PageSelected.bind(page.id)}
-            checked={onlyOn.includes(page.id)}
-          />
-        );
-      });
+      return items.map((page) => (
+        <CheckboxControl
+          key={page.id}
+          label={decodeEntities(page.title?.rendered || "")}
+          onChange={(checked) => handlePageToggle(checked, page.id)}
+          checked={onlyOn.includes(page.id)}
+        />
+      ));
     };
 
-    const [selectedPages, setSelectedPages] = useState([]);
-
-    const [selectedPagesControls, setSelectedPagesControls] = useState(
-      GetSelectedPagesControls(),
-    );
-
-    // Update selectedPagesControls on page resolve
+    // Sync initial fetched pages to state
     useEffect(() => {
-      setSelectedPages(initialSelectedPages);
-    }, [selectedPagesResolved]);
+      if (initialSelectedPages) {
+        setSelectedPages(initialSelectedPages);
+      }
+    }, [initialSelectedPages, selectedPagesResolved]);
 
-    // Update selectedPagesControls on check/uncheck
+    // Keep state in sync with current attributes
     useEffect(() => {
-      setSelectedPages(
-        selectedPages.filter((p) => {
-          return attributes.onlyOn.includes(p.id);
-        }),
-      );
+      setSelectedPages((prev) => prev.filter((p) => onlyOn.includes(p.id)));
     }, [attributes.onlyOn]);
 
+    /**
+     * Update child blocks if parent block filters are modified
+     */
     useEffect(() => {
-      setSelectedPagesControls(
-        BuildCheckboxControls({
-          hasResolved: selectedPagesResolved,
-          items: selectedPages,
-          showNoResults: false,
-        }),
-      );
-    }, [selectedPages]);
+      if (children && children.length > 0) {
+        let inherited = {};
 
-    /**
-     * Update the children block if we update a parent blocks filters
-     */
-    useEffect( 
-      () => {
-        if(children.length > 0){
-          // Update the child block's attributes
-          let inherited = {}
+        const boolKeys = ["onlyLoggedIn", "onlyNotLoggedIn", "onlyOn"];
+        boolKeys.forEach((key) => {
+          if (attributes[key]) {
+            inherited[key] = attributes[key];
+            inherited[key + "Inherited"] = true;
+          }
+        });
 
-          /**
-           * Check if booleans are true
-           */
-          let boolKeys  = [
-            'onlyLoggedIn',
-            'onlyNotLoggedIn',
-            'onlyOn'
-          ];
+        const arrayKeys = ["phpFilters", "roles"];
+        arrayKeys.forEach((key) => {
+          if (attributes[key] && attributes[key].length > 0) {
+            inherited[key] = attributes[key];
+            inherited[key + "Inherited"] = true;
+          }
+        });
 
-          // Set on the child only if true
-          boolKeys.forEach(key => {
-
-            if(attributes[key]){
-              inherited[key]  = attributes[key];
-              inherited[key + 'Inherited'] = true; // mark as inherited
-            }
-          });
-
-          /**
-           * Check if arrays are not empty
-           */
-          let arrayKeys  = [
-            'phpFilters',
-            'roles',
-          ];
-
-          // Set on the child only if true
-          arrayKeys.forEach(key => {
-
-            if(attributes[key].length > 0){
-              inherited[key]  = attributes[key];
-              inherited[key + 'Inherited'] = true; // mark as inherited
-            }
-          });
-
-          children.forEach(function(child){
-              dispatch('core/block-editor').updateBlockAttributes(child.clientId, inherited);
-          });
-        }
-      }, 
-      [ attributes.hideOnMobile, attributes.onlyLoggedIn, attributes.onlyNotLoggedIn, attributes.onlyOn, attributes.phpFilters, attributes.phpFilterInverseLogic, attributes.roles, attributes.rolesInverseLogic ] 
-    );
-
-    /**
-     * PHP Filters
-     */
-    const createFilterControls = function () {
-      return [
-        allowedPhpFilters.map((data) => {
-          return (
-            <CheckboxControl
-              key={data}
-              label={data}
-              onChange={(checked) =>
-                onPhpFiltersChanged(
-                  checked,
-                  data,
-                )
-              }
-              checked={attributes.phpFilters.indexOf(data) > -1}
-            />
+        children.forEach((child) => {
+          dispatch("core/block-editor").updateBlockAttributes(
+            child.clientId,
+            inherited
           );
-        }),
-      ];
-    };
-
-    const onPhpFiltersChanged = function (checked, filterName) {
-      let phpFilters = attributes.phpFilters;
-
-      // A role just got selected
-      if (checked) {
-        // Add to stored roles
-        phpFilters.push(filterName);
-      } else {
-        // remove from array
-        phpFilters = phpFilters.filter((p) => {
-          return p != filterName;
         });
       }
+    }, [
+      attributes.hideOnMobile,
+      attributes.onlyLoggedIn,
+      attributes.onlyNotLoggedIn,
+      attributes.onlyOn,
+      attributes.phpFilters,
+      attributes.phpFilterInverseLogic,
+      attributes.roles,
+      attributes.rolesInverseLogic,
+    ]);
 
-      // Store in Attributes
-      // We need to set a new array to trigger a re-render
-      setAttributes({ phpFilters: [...phpFilters] });
+    /**
+     * PHP Filters logic
+     */
+    const onPhpFiltersChanged = (checked, filterName) => {
+      let updatedFilters = [...phpFilters];
+
+      if (checked) {
+        updatedFilters.push(filterName);
+      } else {
+        updatedFilters = updatedFilters.filter((f) => f !== filterName);
+      }
+
+      setAttributes({ phpFilters: updatedFilters });
+    };
+
+    const createFilterControls = () => {
+      return allowedPhpFilters.map((filterName) => (
+        <CheckboxControl
+          key={filterName}
+          label={filterName}
+          onChange={(checked) => onPhpFiltersChanged(checked, filterName)}
+          checked={phpFilters.includes(filterName)}
+        />
+      ));
     };
 
     /**
-     * ROLES
+     * Roles logic
      */
+    const onRoleSelected = (checked, roleSlug) => {
+      let updatedRoles = [...roles];
+
+      if (checked) {
+        updatedRoles.push(roleSlug);
+      } else {
+        updatedRoles = updatedRoles.filter((r) => r !== roleSlug);
+      }
+
+      setAttributes({ roles: updatedRoles });
+    };
+
     const createRolesSelectors = () => {
-      return [
-        availableRoles.map((data) => {
-          return (
-            <CheckboxControl
-              key={data.value}
-              label={data.label}
-              onChange={(checked) =>
-                onRoleSelected(
-                  checked,
-                  data.value,
-                )
-              }
-              checked={attributes.roles.indexOf(data.value) > -1}
-            />
-          );
-        }),
-      ];
-    };
-
-    /**
-     * Runs when a role gets (de)selected
-     * @param {bool} checked true when selected, false otherwise
-     */
-    const onRoleSelected = function (checked, roleSlug) {
-      let roles = attributes.roles;
-
-      // A role just got selected
-      if (checked) {
-        // Add to stored roles
-        roles.push(roleSlug);
-      } else {
-        // remove from array
-        roles = roles.filter((p) => {
-          return p != roleSlug;
-        });
-      }
-
-      // Store in Attributes
-      // Store as a new array to trigger a new render
-      setAttributes({ roles: [...roles] });
-
+      return availableRoles.map((data) => (
+        <CheckboxControl
+          key={data.value}
+          label={data.label}
+          onChange={(checked) => onRoleSelected(checked, data.value)}
+          checked={roles.includes(data.value)}
+        />
+      ));
     };
 
     const disabledMessage = () => {
-      const inheritedAttributes = Object.keys(attributes).filter(k => k.includes('Inherited') && attributes[k]);
+      const inheritedAttributes = Object.keys(attributes).filter(
+        (k) => k.includes("Inherited") && attributes[k]
+      );
 
-      if(inheritedAttributes.length > 0){
-        return <b>Some attributes are set from the parent block...</b>
+      if (inheritedAttributes.length > 0) {
+        return <b>{__("Some attributes are set from the parent block...", "tsjippy")}</b>;
       }
 
-      return '';
-    }
+      return null;
+    };
 
-    /**
-     * Actual Rendering
-     */
     return (
       <Fragment>
         <BlockEdit {...props} />
         <InspectorControls>
           <PanelBody
-            title       = {__("Block Visibility", "tsjippy")}
-            initialOpen = {false}
+            title={__("Block Visibility", "tsjippy")}
+            initialOpen={false}
           >
-            { disabledMessage() }
-            <Disabled isDisabled={ attributes.hideOnMobileInherited }>
+            {disabledMessage()}
+
+            <Disabled isDisabled={attributes.hideOnMobileInherited}>
               <ToggleControl
                 label={__("Hide on mobile", "tsjippy")}
                 checked={!!attributes.hideOnMobile}
@@ -461,7 +358,7 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
               />
             </Disabled>
 
-            <Disabled isDisabled={ attributes.onlyLoggedInInherited }>
+            <Disabled isDisabled={attributes.onlyLoggedInInherited}>
               <ToggleControl
                 label={__("Hide if not logged in", "tsjippy")}
                 checked={!!attributes.onlyLoggedIn}
@@ -471,7 +368,7 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
               />
             </Disabled>
 
-            <Disabled isDisabled={ attributes.onlyNotLoggedInInherited }>
+            <Disabled isDisabled={attributes.onlyNotLoggedInInherited}>
               <ToggleControl
                 label={__("Hide if logged in", "tsjippy")}
                 checked={!!attributes.onlyNotLoggedIn}
@@ -480,11 +377,12 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
                 }
               />
             </Disabled>
-            
-            <br></br>
-            <Disabled isDisabled={ attributes.phpFiltersInherited }>
+
+            <br />
+
+            <Disabled isDisabled={attributes.phpFiltersInherited}>
               <b>{__("PHP Functions To Apply", "tsjippy")}</b>
-              <br></br>
+              <br />
               {__("Select to hide", "tsjippy")}
               <ToggleControl
                 label={__("Inverse Logic", "tsjippy")}
@@ -498,28 +396,43 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
               {createFilterControls()}
             </Disabled>
 
-            <Disabled isDisabled={ attributes.onlyOnInherited }>
+            <Disabled isDisabled={attributes.onlyOnInherited}>
               <strong>{__("Select pages", "tsjippy")}</strong>
-              <br></br>
+              <br />
               {__("Select pages you want this widget to show on", "tsjippy")}.
-              <br></br>
+              <br />
               {__("Leave empty for all pages", "tsjippy")}
-              <br></br>
-              <br></br>
-              {selectedPagesControls}
+              <br />
+              <br />
+
+              {onlyOn.length > 0 && (
+                <>
+                  <i>{__("Currently selected pages", "tsjippy")}:</i>
+                  <br />
+                  <BuildCheckboxControls
+                    hasResolved={selectedPagesResolved}
+                    items={selectedPages}
+                    showNoResults={false}
+                  />
+                </>
+              )}
+
               <i>
                 {__(
                   "Use searchbox below to search for more pages to include",
-                  "tsjippy",
+                  "tsjippy"
                 )}
               </i>
               <SearchControl onChange={setSearchTerm} value={searchTerm} />
-              <BuildCheckboxControls hasResolved={pagesResolved} items={pages} />
+              <BuildCheckboxControls
+                hasResolved={pagesResolved}
+                items={pages}
+              />
             </Disabled>
 
-            <Disabled isDisabled={ attributes.rolesInherited }>
+            <Disabled isDisabled={attributes.rolesInherited}>
               <b>{__("Roles Who Can See This Block", "tsjippy")}</b>
-              <br></br>
+              <br />
               <ToggleControl
                 label={__("Inverse Logic", "tsjippy")}
                 checked={!!attributes.rolesInverseLogic}
@@ -529,7 +442,7 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
                   })
                 }
               />
-              { createRolesSelectors() }
+              {createRolesSelectors()}
             </Disabled>
           </PanelBody>
         </InspectorControls>
@@ -541,5 +454,5 @@ const blockFilterControls = createHigherOrderComponent((BlockEdit) => {
 wp.hooks.addFilter(
   "editor.BlockEdit",
   "tsjippy/block-filter-controls",
-  blockFilterControls,
+  blockFilterControls
 );

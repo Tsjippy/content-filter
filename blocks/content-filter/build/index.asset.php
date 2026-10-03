@@ -9,8 +9,7 @@
 		'wp-data',
 		'wp-element',
 		'wp-html-entities',
-		'wp-i18n',
-		'wp-url'
+		'wp-i18n'
 	),
-	'version' => '46ebda1df62bf63a7110'
+	'version' => '33024467a94fac1cbb7d'
 );
