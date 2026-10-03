@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- block filter
 
 ### Updated
+
+## [10.7.7] - 2026-10-03
+
+
+### Fixed
+- block filter
 
 ## [10.7.6] - 2026-10-03
 
